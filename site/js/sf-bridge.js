@@ -67,7 +67,55 @@
     if (!api) return;
     try {
       api.sendEvent(payload);
+      /* Feed the SF Data Cloud inspector panel */
+      window.__vtSfOutbound = window.__vtSfOutbound || [];
+      window.__vtSfOutbound.push({
+        t: Date.now(),
+        e: JSON.parse(JSON.stringify(payload)),
+      });
     } catch (_) {}
+  }
+
+  function resolvePageType() {
+    var explicit =
+      document.body && document.body.dataset
+        ? document.body.dataset.pageType
+        : "";
+    if (explicit) return explicit;
+
+    var path = window.location.pathname;
+    if (path === "/" || /\/index\.html$/i.test(path)) return "home";
+    if (/\/categories\.html$/i.test(path)) return "category_listing";
+    if (/\/product\.html$/i.test(path)) return "product_detail";
+    if (/\/cart\.html$/i.test(path)) return "cart";
+    if (/\/checkout\.html$/i.test(path)) return "checkout";
+    if (/\/login\.html$/i.test(path)) return "login";
+    if (/\/account\.html$/i.test(path)) return "account";
+    if (/\/about\.html$/i.test(path)) return "about";
+    if (/\/thank-you\.html$/i.test(path)) return "order_confirmation";
+    return "unknown";
+  }
+
+  function withContext(payload) {
+    payload = payload || {};
+    payload.interaction = payload.interaction || {};
+    payload.interaction.attributes = payload.interaction.attributes || {};
+
+    if (!payload.interaction.attributes.sourceUrl) {
+      payload.interaction.attributes.sourceUrl = window.location.href;
+    }
+    if (!payload.interaction.attributes.sourceChannel) {
+      payload.interaction.attributes.sourceChannel = "web";
+    }
+    if (!payload.interaction.attributes.sourceLocale) {
+      payload.interaction.attributes.sourceLocale =
+        document.documentElement.lang || navigator.language || "en-US";
+    }
+    if (!payload.interaction.attributes.sourcePageType) {
+      payload.interaction.attributes.sourcePageType = resolvePageType();
+    }
+
+    return payload;
   }
 
   /* ── GA4 → Salesforce event translators ─────────────────────── */
@@ -192,6 +240,97 @@
         },
       };
     },
+
+    logout: function() {
+      return {
+        interaction: {
+          name: "Logout",
+        },
+        user: {
+          identities: {
+            anonymousId: null,
+          },
+        },
+      };
+    },
+
+    view_item_list: function(d) {
+      var ec = d.ecommerce || {};
+      return {
+        interaction: {
+          name: "View Item List",
+          itemListName: ec.item_list_name || "",
+          lineItems: (ec.items || []).map(function(item) {
+            return {
+              catalogObjectType: "Product",
+              catalogObjectId: String(item.item_id || ""),
+              quantity: 1,
+              price: item.price || 0,
+            };
+          }),
+        },
+      };
+    },
+
+    select_item: function(d) {
+      var ec = d.ecommerce || {};
+      var item = (ec.items || [])[0] || {};
+      if (!item.item_id) return null;
+      return {
+        interaction: {
+          name: "Select Item",
+          itemListName: ec.item_list_name || "",
+          lineItem: {
+            catalogObjectType: "Product",
+            catalogObjectId: String(item.item_id),
+            quantity: 1,
+            price: item.price || 0,
+          },
+        },
+      };
+    },
+
+    cart_page_view: function(d) {
+      var ec = d.ecommerce || {};
+      return {
+        interaction: {
+          name: "Cart Page View",
+          orderValue: ec.value || 0,
+          currency: ec.currency || "USD",
+        },
+      };
+    },
+
+    checkout_page_view: function(d) {
+      var ec = d.ecommerce || {};
+      return {
+        interaction: {
+          name: "Checkout Page View",
+          orderValue: ec.value || 0,
+          currency: ec.currency || "USD",
+        },
+      };
+    },
+
+    order_confirmation_view: function(d) {
+      var order = d.order || {};
+      return {
+        interaction: {
+          name: "Order Confirmation View",
+          orderId: String(order.order_id || ""),
+          totalValue: order.value || 0,
+          currency: order.currency || "USD",
+          lineItems: (order.items || []).map(function(item) {
+            return {
+              catalogObjectType: "Product",
+              catalogObjectId: String(item.item_id || ""),
+              quantity: item.quantity || 1,
+              price: item.price || 0,
+            };
+          }),
+        },
+      };
+    },
   };
 
   /* ── Patch window.dataLayer.push ────────────────────────────── */
@@ -218,7 +357,7 @@
     if (typeof translator !== "function") return;
     try {
       var payload = translator(item);
-      if (payload) sendToSF(payload);
+      if (payload) sendToSF(withContext(payload));
     } catch (_) {}
   }
 })();

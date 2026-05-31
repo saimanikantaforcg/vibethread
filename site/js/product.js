@@ -4,6 +4,15 @@ let selectedSize = null;
 let selectedColor = null;
 let currentQuantity = 1;
 
+function escapeAttr(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   initializeProductPage();
 });
@@ -66,10 +75,10 @@ function sendDataCloudCatalogEvent(product) {
           unitPrice: product.price,
           color: product.colors ? product.colors.join(", ") : "",
           itemType: product.category || "",
-          inventory: 1
-        }
-      }
-    }
+          inventory: 1,
+        },
+      },
+    },
   });
 }
 
@@ -116,8 +125,10 @@ function updateProductThumbnails() {
   thumbnailsContainer.innerHTML = images
     .map(
       (image, index) => `
-        <button onclick="changeMainImage('${image}')" class="border-2 border-gray-200 rounded-lg overflow-hidden hover:border-blue-500 transition duration-300">
-            <img src="${image}" alt="Product thumbnail ${index +
+        <button onclick="changeMainImage('${escapeAttr(
+          image,
+        )}')" class="border-2 border-gray-200 rounded-lg overflow-hidden hover:border-blue-500 transition duration-300">
+            <img src="${escapeAttr(image)}" alt="Product thumbnail ${index +
         1}" class="w-full h-20 object-cover">
         </button>
     `,
@@ -149,10 +160,10 @@ function updateSizeOptions() {
     sizeOptions.innerHTML = currentProduct.sizes
       .map(
         (size) => `
-            <button onclick="selectSize('${size}')" 
+            <button onclick="selectSize('${escapeAttr(size)}')" 
                     class="size-option px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-blue-500 transition duration-300" 
-                    data-size="${size}">
-                ${size}
+                    data-size="${escapeAttr(size)}">
+                ${escapeAttr(size)}
             </button>
         `,
       )
@@ -181,14 +192,14 @@ function updateColorOptions() {
     colorOptions.innerHTML = currentProduct.colors
       .map(
         (color) => `
-            <button onclick="selectColor('${color}')" 
+            <button onclick="selectColor('${escapeAttr(color)}')" 
                     class="color-option px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-blue-500 transition duration-300" 
-                    data-color="${color}">
+                    data-color="${escapeAttr(color)}">
                 <div class="flex items-center space-x-2">
                     <div class="w-4 h-4 rounded-full border" style="background-color: ${getColorHex(
                       color,
                     )}"></div>
-                    <span>${color}</span>
+                    <span>${escapeAttr(color)}</span>
                 </div>
             </button>
         `,

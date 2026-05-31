@@ -51,7 +51,9 @@ function setStoredConsent(status) {
 function resolveConsentStatus(api, accepted) {
   const fallback = accepted ? "Opt In" : "Opt Out";
   if (!api || !api.ConsentStatus) return fallback;
-  return accepted ? api.ConsentStatus.OptIn || fallback : api.ConsentStatus.OptOut || fallback;
+  return accepted
+    ? api.ConsentStatus.OptIn || fallback
+    : api.ConsentStatus.OptOut || fallback;
 }
 
 function resolveConsentPurpose(api) {
@@ -60,12 +62,32 @@ function resolveConsentPurpose(api) {
   return api.ConsentPurpose.Tracking || fallback;
 }
 
-function applyTrackingConsent(accepted) {
-  const getApi = window.getSalesforceInteractions;
-  if (typeof getApi !== "function") return;
+function applyTrackingConsent(accepted, retryCount) {
+  var maxRetries = typeof retryCount === "number" ? retryCount : 10;
+  var getApi = window.getSalesforceInteractions;
+  if (typeof getApi !== "function") {
+    if (maxRetries > 0) {
+      setTimeout(function() {
+        applyTrackingConsent(accepted, maxRetries - 1);
+      }, 500);
+    }
+    return;
+  }
 
-  const api = getApi();
-  if (!api || typeof api.sendEvent !== "function") return;
+  var api;
+  try {
+    api = getApi();
+  } catch (_) {
+    api = null;
+  }
+  if (!api || typeof api.sendEvent !== "function") {
+    if (maxRetries > 0) {
+      setTimeout(function() {
+        applyTrackingConsent(accepted, maxRetries - 1);
+      }, 500);
+    }
+    return;
+  }
 
   api.sendEvent({
     consents: [
@@ -84,10 +106,11 @@ function buildConsentBanner() {
   banner.setAttribute("role", "dialog");
   banner.setAttribute("aria-live", "polite");
   banner.style.cssText =
-    "position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;background:#0f172a;color:#e2e8f0;border:1px solid #334155;border-radius:12px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.35);display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;";
+    "position:fixed;left:16px;right:16px;bottom:80px;z-index:10001;background:#0f172a;color:#e2e8f0;border:1px solid #334155;border-radius:12px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.35);display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;";
 
   const text = document.createElement("p");
-  text.style.cssText = "margin:0;font:500 14px/1.4 system-ui, sans-serif;flex:1;min-width:220px;";
+  text.style.cssText =
+    "margin:0;font:500 14px/1.4 system-ui, sans-serif;flex:1;min-width:220px;";
   text.textContent =
     "Allow tracking cookies for product analytics and personalization in this demo?";
 
@@ -163,25 +186,36 @@ export function initConsentBanner() {
   if (!document.body) return;
   if (document.getElementById(CONSENT_BANNER_ID)) return;
 
-  // If cookie is missing, force a fresh consent prompt even when localStorage exists.
+  // Check cookie first
   const cookieConsent = getCookieValue(CONSENT_COOKIE_NAME);
-  if (cookieConsent !== "accepted" && cookieConsent !== "declined") {
-    const consentBanner = buildConsentBanner();
-    document.body.appendChild(consentBanner);
-    return;
-  }
 
-  const existingConsent = getStoredConsent();
-  if (existingConsent === "accepted") {
+  if (cookieConsent === "accepted") {
     applyTrackingConsent(true);
     return;
   }
-
-  if (existingConsent === "declined") {
+  if (cookieConsent === "declined") {
     applyTrackingConsent(false);
     return;
   }
 
+  // Cookie missing — check localStorage backup and restore if found
+  var lsValue = null;
+  try {
+    lsValue = localStorage.getItem(CONSENT_STORAGE_KEY);
+  } catch (_) {}
+
+  if (lsValue === "accepted") {
+    setCookieValue(CONSENT_COOKIE_NAME, "accepted");
+    applyTrackingConsent(true);
+    return;
+  }
+  if (lsValue === "declined") {
+    setCookieValue(CONSENT_COOKIE_NAME, "declined");
+    applyTrackingConsent(false);
+    return;
+  }
+
+  // No consent stored anywhere — show the banner
   const consentBanner = buildConsentBanner();
   document.body.appendChild(consentBanner);
 }

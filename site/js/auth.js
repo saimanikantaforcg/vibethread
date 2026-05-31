@@ -217,6 +217,13 @@ class AuthSystem {
       return false;
     }
 
+    // Demo password check: validate against stored password if present
+    var storedUser = existingUsers[index];
+    if (storedUser.password && storedUser.password !== password) {
+      this.showMessage("Incorrect password. Please try again.", "error");
+      return false;
+    }
+
     const user = AuthSystem.normalizeUserRecord(existingUsers[index]);
     user.loginHistory.push(new Date().toISOString());
 

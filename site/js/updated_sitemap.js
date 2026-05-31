@@ -55,6 +55,14 @@ function parseMoneyFromSelector(selector) {
   return parseFloat(raw.replace(/[^0-9.]/g, "")) || 0;
 }
 
+function getLastOrder() {
+  try {
+    return JSON.parse(localStorage.getItem("vibeThreadLastOrder") || "null");
+  } catch (_) {
+    return null;
+  }
+}
+
 function getActiveOptionText(containerSelector) {
   const active = SalesforceInteractions.cashDom(
     containerSelector + " .bg-blue-600",
@@ -124,13 +132,6 @@ SalesforceInteractions.init({
   personalization: {
     dataspace: "default",
   },
-  consents: [
-    {
-      purpose: SalesforceInteractions.ConsentPurpose.Tracking,
-      provider: "Example Consent Manager",
-      status: SalesforceInteractions.ConsentStatus.OptIn,
-    },
-  ],
 }).then(function() {
   const sitemapConfig = {
     global: {
@@ -138,6 +139,15 @@ SalesforceInteractions.init({
         if (!event || !event.interaction) {
           return event;
         }
+
+        /* Feed the SF Data Cloud inspector panel */
+        try {
+          window.__vtSfOutbound = window.__vtSfOutbound || [];
+          window.__vtSfOutbound.push({
+            t: Date.now(),
+            e: JSON.parse(JSON.stringify(event)),
+          });
+        } catch (_) {}
 
         const eventTypeMap = {
           userEngagement: "browse",
@@ -223,7 +233,7 @@ SalesforceInteractions.init({
         contentZones: [
           {
             name: "hero_banner",
-            selector: "section.bg-gradient-to-r",
+            selector: "section[class*='bg-[#161B22]']",
           },
           {
             name: "recommendations_1",
@@ -261,7 +271,7 @@ SalesforceInteractions.init({
         contentZones: [
           {
             name: "recs_header",
-            selector: "section.bg-blue-600",
+            selector: "#categoryTitle",
           },
           {
             name: "recs_featured",
@@ -352,53 +362,6 @@ SalesforceInteractions.init({
             selector: "#relatedProducts",
           },
         ],
-
-        listeners: [
-          {
-            name: "Add to Cart",
-            element: "#addToCartBtn",
-
-            onEvent: function() {
-              const productId = getProductId();
-
-              const quantityText =
-                SalesforceInteractions.cashDom("#quantity").val() ||
-                SalesforceInteractions.cashDom("#quantity").text() ||
-                "1";
-
-              const quantity = parseInt(quantityText, 10) || 1;
-              const price = parseMoneyFromSelector("#productPrice");
-
-              return {
-                interaction: {
-                  name: "addToCart",
-                  eventType: "cart",
-
-                  attributes: {
-                    sourcePageType: "pdp",
-                    sourceUrl: getCurrentUrl(),
-                    sourceChannel: "web",
-                    sourceLocale: getPageLocale(),
-                    pageView: 1,
-                  },
-
-                  catalogObject: {
-                    type: "Product",
-                    id: productId,
-                  },
-
-                  lineItem: {
-                    catalogObjectType: "Product",
-                    catalogObjectId: productId,
-                    quantity: quantity,
-                    price: price,
-                    currency: "USD",
-                  },
-                },
-              };
-            },
-          },
-        ],
       },
 
       /* -----------------------------------------------------------------------
@@ -461,38 +424,6 @@ SalesforceInteractions.init({
             selector: "#checkoutItems",
           },
         ],
-
-        listeners: [
-          {
-            name: "Face Pay Order Complete",
-            element: "#facePayBtn",
-
-            onEvent: function() {
-              const total = parseMoneyFromSelector("#checkoutTotal");
-
-              return {
-                interaction: {
-                  name: "order complete",
-                  eventType: "order",
-
-                  attributes: {
-                    sourcePageType: "checkout",
-                    sourceUrl: getCurrentUrl(),
-                    sourceChannel: "web",
-                    sourceLocale: getPageLocale(),
-                    pageView: 1,
-                  },
-
-                  order: {
-                    id: "ORDER-" + Date.now(),
-                    totalValue: total,
-                    currency: "USD",
-                  },
-                },
-              };
-            },
-          },
-        ],
       },
 
       /* -----------------------------------------------------------------------
@@ -518,53 +449,7 @@ SalesforceInteractions.init({
           },
         },
 
-        listeners: [
-          {
-            name: "Sign In Submit",
-            element: "#loginFormForm",
-
-            onEvent: function(eventObject) {
-              if (
-                eventObject &&
-                eventObject.sourceEvent &&
-                eventObject.sourceEvent.preventDefault
-              ) {
-                eventObject.sourceEvent.preventDefault();
-              }
-
-              const email = getValue("#loginEmail", "");
-
-              if (email) {
-                window.sfepCaptureEmail(email);
-              }
-
-              return null;
-            },
-          },
-
-          {
-            name: "Create Account Submit",
-            element: "#registerFormForm",
-
-            onEvent: function(eventObject) {
-              if (
-                eventObject &&
-                eventObject.sourceEvent &&
-                eventObject.sourceEvent.preventDefault
-              ) {
-                eventObject.sourceEvent.preventDefault();
-              }
-
-              window.sfepCaptureIdentity({
-                firstName: getValue("#firstName", ""),
-                lastName: getValue("#lastName", ""),
-                email: getValue("#registerEmail", ""),
-              });
-
-              return null;
-            },
-          },
-        ],
+        listeners: [],
       },
 
       /* -----------------------------------------------------------------------
@@ -596,14 +481,6 @@ SalesforceInteractions.init({
             element: "form",
 
             onEvent: function(eventObject) {
-              if (
-                eventObject &&
-                eventObject.sourceEvent &&
-                eventObject.sourceEvent.preventDefault
-              ) {
-                eventObject.sourceEvent.preventDefault();
-              }
-
               const email = getValue("#email", "");
 
               if (email) {
@@ -614,6 +491,58 @@ SalesforceInteractions.init({
             },
           },
         ],
+      },
+
+      {
+        name: "thank_you",
+
+        isMatch: function() {
+          return window.location.pathname === "/thank-you.html";
+        },
+
+        interaction: {
+          name: "order confirmation view",
+          eventType: "order",
+          attributes: {
+            pageName: "Order Confirmation",
+            pageType: "thank_you",
+            pageUrl: getCurrentUrl,
+            sourcePageType: "thank_you",
+            pageView: 1,
+          },
+          order: {
+            id: function() {
+              const order = getLastOrder();
+              return order && order.id ? String(order.id) : "";
+            },
+            totalValue: function() {
+              const order = getLastOrder();
+              return order && typeof order.total === "number" ? order.total : 0;
+            },
+            currency: "USD",
+            lineItems: function() {
+              const order = getLastOrder();
+              const items =
+                order && Array.isArray(order.items) ? order.items : [];
+
+              return items.map(function(item) {
+                const price =
+                  typeof item.unitPrice === "number"
+                    ? item.unitPrice
+                    : typeof item.price === "number"
+                    ? item.price
+                    : 0;
+
+                return {
+                  catalogObjectType: "Product",
+                  catalogObjectId: String(item.productId || ""),
+                  quantity: item.quantity || 1,
+                  price: price,
+                };
+              });
+            },
+          },
+        },
       },
     ],
   };

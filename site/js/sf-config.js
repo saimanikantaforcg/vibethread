@@ -134,7 +134,7 @@
       style: [
         "position:fixed",
         "right:16px",
-        "bottom:90px",
+        "bottom:16px",
         "z-index:10000",
         "background:" + (custom ? "#16a34a" : "#2563eb"),
         "color:#fff",

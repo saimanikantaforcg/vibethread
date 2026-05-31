@@ -58,7 +58,6 @@ function loadFeaturedProducts() {
     .join("");
 
   if (typeof dataLayerManager !== "undefined") {
-    dataLayerManager.trackPageView("home", document.title);
     dataLayerManager.trackViewItemList(
       featuredProducts,
       "Featured Products - Home",
@@ -66,14 +65,22 @@ function loadFeaturedProducts() {
   }
 }
 
+function _escMain(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 // Create product card HTML
 function createProductCard(product) {
   return `
         <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
             <div class="relative">
-                <img src="${product.image}" alt="${
-    product.name
-  }" class="w-full h-64 object-cover">
+                <img src="${_escMain(product.image)}" alt="${_escMain(
+    product.name,
+  )}" class="w-full h-64 object-cover">
                 <div class="absolute top-2 right-2">
                     <button class="w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-100 transition duration-300">
                         <i class="fas fa-heart text-gray-400 hover:text-red-500"></i>
@@ -81,12 +88,12 @@ function createProductCard(product) {
                 </div>
             </div>
             <div class="p-4">
-                <h3 class="font-semibold text-gray-800 mb-2">${
-                  product.name
-                }</h3>
-                <p class="text-gray-600 text-sm mb-3 line-clamp-2">${
-                  product.description
-                }</p>
+                <h3 class="font-semibold text-gray-800 mb-2">${_escMain(
+                  product.name,
+                )}</h3>
+                <p class="text-gray-600 text-sm mb-3 line-clamp-2">${_escMain(
+                  product.description,
+                )}</p>
                 <div class="flex items-center justify-between">
                     <span class="text-xl font-bold text-blue-600">${ProductUtils.formatPrice(
                       product.price,

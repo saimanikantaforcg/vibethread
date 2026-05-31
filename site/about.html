@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>About Us - VibeThread</title>
+    <title>About the Creator - VibeThread</title>
     <meta
       name="description"
-      content="About VibeThread — your fashion destination for trendy clothing and accessories. Learn our story and meet the team."
+      content="VibeThread demo built by Saimanikanta Ragi — Salesforce Marketing Cloud Specialist &amp; Associate Consultant at Capgemini."
     />
 
     <!-- DataLayer initialization -->
@@ -18,6 +18,8 @@
     <!-- Salesforce SDK: managed via sf-config.js — set your Beacon ID using the ⚙ SDK Setup panel -->
     <script src="js/sf-config.js"></script>
     <script src="js/sf-bridge.js"></script>
+    <!-- Event Debugger (optional, dev-only) — activate with ?debug-events or Ctrl+Shift+E -->
+    <script src="js/event-debugger.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -175,245 +177,304 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="bg-blue-600 text-white py-20">
+    <section class="bg-[#161B22] border-b border-gray-200 text-gray-800 py-20">
       <div class="container mx-auto px-4 text-center">
-        <h1 class="text-5xl font-bold mb-6">About VibeThread</h1>
-        <p class="text-xl max-w-3xl mx-auto">
-          We're passionate about bringing you the latest in fashion trends while
-          maintaining quality, affordability, and style.
+        <div
+          class="w-28 h-28 rounded-full bg-blue-600 mx-auto mb-6 flex items-center justify-center text-5xl font-bold text-white select-none"
+        >
+          SR
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold mb-3">Saimanikanta Ragi</h1>
+        <p class="text-blue-600 text-xl font-semibold mb-2">
+          Associate Consultant · Capgemini
+        </p>
+        <p class="text-gray-400 text-base mb-6">
+          Salesforce Marketing Cloud Specialist · Hyderabad, India
+        </p>
+        <div class="flex items-center justify-center gap-4">
+          <a
+            href="https://in.linkedin.com/in/saimanikanta-ragi-700b4617b"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-semibold text-sm transition duration-300"
+          >
+            <i class="fab fa-linkedin"></i> LinkedIn
+          </a>
+          <span class="text-gray-400 text-sm">3.7 K+ followers</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="py-16">
+      <div class="container mx-auto px-4 max-w-3xl">
+        <h2 class="text-3xl font-bold mb-6 text-gray-800">About</h2>
+        <p class="text-gray-600 leading-relaxed text-lg mb-6">
+          I am a Salesforce Marketing Cloud Specialist with a passion for
+          helping businesses leverage the full potential of Salesforce's suite
+          of marketing solutions. With hands-on expertise across
+          <strong>Data Cloud</strong>,
+          <strong>Marketing Cloud Engagement</strong>, and
+          <strong>Personalization (Interaction Studio)</strong>, I focus on
+          building seamless, data-driven customer experiences that drive real
+          business results.
+        </p>
+        <p class="text-gray-600 leading-relaxed text-lg">
+          This <strong>VibeThread</strong> demo site is a working showcase of
+          <strong>Salesforce Data Cloud Web SDK</strong> integration — capturing
+          browse, catalog, cart, order, and identity events in real time and
+          forwarding them to Data Cloud for unified customer profiles and
+          personalization.
         </p>
       </div>
     </section>
 
-    <!-- Our Story -->
-    <section class="py-16">
-      <div class="container mx-auto px-4">
-        <div class="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 class="text-3xl font-bold mb-6 text-gray-800">Our Story</h2>
-            <p class="text-gray-700 mb-4 leading-relaxed">
-              Founded in 2020, VibeThread began as a small online boutique with
-              a simple mission: to make high-quality, stylish clothing
-              accessible to everyone. What started as a passion project has
-              grown into a trusted destination for fashion enthusiasts
-              worldwide.
-            </p>
-            <p class="text-gray-700 mb-4 leading-relaxed">
-              We believe that great style shouldn't come at a great cost. That's
-              why we work directly with manufacturers to bring you premium
-              clothing at fair prices, without compromising on quality or
-              ethical practices.
-            </p>
-            <p class="text-gray-700 leading-relaxed">
-              Today, VibeThread serves thousands of customers globally, offering
-              everything from everyday essentials to statement pieces that help
-              you express your unique style.
-            </p>
-          </div>
-          <div>
-            <img
-              src="Assets/clothing_rack.jpg"
-              alt="Our Story"
-              class="rounded-lg shadow-lg w-full"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Our Values -->
+    <!-- Expertise -->
     <section class="py-16 bg-gray-100">
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">
-          Our Values
+          Core Expertise
         </h2>
-        <div class="grid md:grid-cols-3 gap-8">
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           <div class="text-center">
             <div
               class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4"
             >
-              <i class="fas fa-heart text-white text-2xl"></i>
+              <i class="fas fa-cloud text-white text-2xl"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-4 text-gray-800">
-              Quality First
+            <h3 class="text-xl font-semibold mb-3 text-gray-800">
+              Salesforce Data Cloud
             </h3>
-            <p class="text-gray-700">
-              We carefully select each item in our collection, ensuring that
-              every piece meets our high standards for quality and
-              craftsmanship.
+            <p class="text-gray-600 text-sm">
+              Web SDK integration, unified profiles, segmentation, calculated
+              insights, and identity resolution.
             </p>
           </div>
           <div class="text-center">
             <div
               class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4"
             >
-              <i class="fas fa-leaf text-white text-2xl"></i>
+              <i class="fas fa-envelope-open-text text-white text-2xl"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-4 text-gray-800">
-              Sustainability
+            <h3 class="text-xl font-semibold mb-3 text-gray-800">
+              Marketing Cloud Engagement
             </h3>
-            <p class="text-gray-700">
-              We're committed to sustainable fashion practices, working with
-              eco-friendly materials and ethical manufacturers whenever
-              possible.
+            <p class="text-gray-600 text-sm">
+              Journey Builder, Email Studio, Automation Studio, AMPscript, and
+              cross-channel campaign orchestration.
             </p>
           </div>
           <div class="text-center">
             <div
               class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4"
             >
-              <i class="fas fa-users text-white text-2xl"></i>
+              <i class="fas fa-user-cog text-white text-2xl"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-4 text-gray-800">
-              Customer First
+            <h3 class="text-xl font-semibold mb-3 text-gray-800">
+              Personalization
             </h3>
-            <p class="text-gray-700">
-              Your satisfaction is our priority. We provide exceptional customer
-              service and stand behind every product we sell.
+            <p class="text-gray-600 text-sm">
+              Einstein Personalization (Interaction Studio) — sitemaps,
+              campaigns, real-time event capture, and A/B testing.
+            </p>
+          </div>
+          <div class="text-center">
+            <div
+              class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <i class="fas fa-code text-white text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3 text-gray-800">
+              Web Development
+            </h3>
+            <p class="text-gray-600 text-sm">
+              HTML, CSS, JavaScript, REST APIs, DataLayer/GA4 event
+              architecture, and SDK integrations.
+            </p>
+          </div>
+          <div class="text-center">
+            <div
+              class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <i class="fas fa-database text-white text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3 text-gray-800">
+              Data Architecture
+            </h3>
+            <p class="text-gray-600 text-sm">
+              Event schema design, consent management, customer data platforms,
+              and real-time ingestion pipelines.
             </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Team Section -->
+    <!-- This Demo -->
     <section class="py-16">
-      <div class="container mx-auto px-4">
+      <div class="container mx-auto px-4 max-w-4xl">
         <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">
-          Meet Our Team
+          What This Demo Showcases
         </h2>
-        <div class="grid md:grid-cols-3 gap-8">
-          <div class="text-center">
-            <img
-              src="Assets/mikep.jpg"
-              alt="Mike P"
-              class="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-            />
-            <h3 class="text-xl font-semibold mb-2 text-gray-800">Mike P</h3>
-            <p class="text-blue-600 mb-2">Founder & CEO</p>
-            <p class="text-gray-700 text-sm">
-              Fashion enthusiast with a passion for style and sustainability.
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-[#161B22] border border-gray-200 rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <i class="fas fa-satellite-dish text-blue-600 text-xl"></i>
+              <h3 class="text-lg font-semibold text-gray-800">
+                Real-Time Event Capture
+              </h3>
+            </div>
+            <p class="text-gray-400 text-sm">
+              Browse, catalog, cart, order, identity, and consent events sent to
+              SF Data Cloud via the Web SDK sitemap.
             </p>
           </div>
-          <div class="text-center">
-            <img
-              src="Assets/chach.jpg"
-              alt="Chach"
-              class="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-            />
-            <h3 class="text-xl font-semibold mb-2 text-gray-800">Chach</h3>
-            <p class="text-blue-600 mb-2">Head of Design</p>
-            <p class="text-gray-700 text-sm">
-              Creative director with expertise in trend forecasting and product
-              development.
+          <div class="bg-[#161B22] border border-gray-200 rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <i class="fas fa-layer-group text-blue-600 text-xl"></i>
+              <h3 class="text-lg font-semibold text-gray-800">
+                DataLayer Bridge
+              </h3>
+            </div>
+            <p class="text-gray-400 text-sm">
+              GA4-style dataLayer events automatically forwarded to Salesforce
+              via sf-bridge.js — zero duplicate code.
             </p>
           </div>
-          <div class="text-center">
-            <img
-              src="Assets/moses.jpg"
-              alt="Moses"
-              class="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-            />
-            <h3 class="text-xl font-semibold mb-2 text-gray-800">Moses</h3>
-            <p class="text-blue-600 mb-2">Operations Manager</p>
-            <p class="text-gray-700 text-sm">
-              Logistics expert ensuring smooth operations and timely deliveries.
+          <div class="bg-[#161B22] border border-gray-200 rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <i class="fas fa-shield-alt text-blue-600 text-xl"></i>
+              <h3 class="text-lg font-semibold text-gray-800">
+                Consent Management
+              </h3>
+            </div>
+            <p class="text-gray-400 text-sm">
+              Cookie + localStorage dual storage, SDK consent opt-in/opt-out,
+              and consent-gated event flow.
+            </p>
+          </div>
+          <div class="bg-[#161B22] border border-gray-200 rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <i class="fas fa-bug text-blue-600 text-xl"></i>
+              <h3 class="text-lg font-semibold text-gray-800">
+                Event Inspector
+              </h3>
+            </div>
+            <p class="text-gray-400 text-sm">
+              Built-in inspector panel (📊 button) shows exact outbound payloads
+              — no browser DevTools needed.
+            </p>
+          </div>
+          <div class="bg-[#161B22] border border-gray-200 rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <i class="fas fa-cogs text-blue-600 text-xl"></i>
+              <h3 class="text-lg font-semibold text-gray-800">
+                Plug-and-Play SDK Setup
+              </h3>
+            </div>
+            <p class="text-gray-400 text-sm">
+              Click ⚙ SDK Setup, paste your own Beacon ID, and events instantly
+              flow to your Salesforce org.
+            </p>
+          </div>
+          <div class="bg-[#161B22] border border-gray-200 rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <i class="fas fa-shopping-bag text-blue-600 text-xl"></i>
+              <h3 class="text-lg font-semibold text-gray-800">
+                Full E-Commerce Flow
+              </h3>
+            </div>
+            <p class="text-gray-400 text-sm">
+              Product browsing → cart → checkout → order confirmation — every
+              step fires schema-aligned events.
             </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Contact Info -->
+    <!-- Contact -->
     <section class="py-16 bg-gray-100">
       <div class="container mx-auto px-4">
         <div class="grid md:grid-cols-2 gap-12">
           <div>
             <h2 class="text-3xl font-bold mb-6 text-gray-800">Get in Touch</h2>
-            <p class="text-gray-700 mb-6">
-              Have questions or feedback? We'd love to hear from you!
+            <p class="text-gray-600 mb-6">
+              Interested in Salesforce Data Cloud, Marketing Cloud, or building
+              a similar demo? Feel free to reach out!
             </p>
             <div class="space-y-4">
               <div class="flex items-center">
-                <i class="fas fa-envelope text-blue-600 w-6"></i>
-                <span class="ml-3 text-gray-700">contact@vibethread.com</span>
-              </div>
-              <div class="flex items-center">
-                <i class="fas fa-phone text-blue-600 w-6"></i>
-                <span class="ml-3 text-gray-700">1-800-CLOTHING</span>
-              </div>
-              <div class="flex items-center">
                 <i class="fas fa-map-marker-alt text-blue-600 w-6"></i>
-                <span class="ml-3 text-gray-700"
-                  >123 Fashion Ave, New York, NY 10001</span
+                <span class="ml-3 text-gray-600"
+                  >Hyderabad, Telangana, India</span
                 >
               </div>
-            </div>
-            <div class="mt-8">
-              <h3 class="text-xl font-semibold mb-4 text-gray-800">
-                Follow Us
-              </h3>
-              <div class="flex space-x-4">
-                <a href="#" class="text-blue-600 hover:text-blue-800 text-2xl"
-                  ><i class="fab fa-facebook"></i
-                ></a>
-                <a href="#" class="text-blue-600 hover:text-blue-800 text-2xl"
-                  ><i class="fab fa-twitter"></i
-                ></a>
-                <a href="#" class="text-blue-600 hover:text-blue-800 text-2xl"
-                  ><i class="fab fa-instagram"></i
-                ></a>
-                <a href="#" class="text-blue-600 hover:text-blue-800 text-2xl"
-                  ><i class="fab fa-linkedin"></i
-                ></a>
+              <div class="flex items-center">
+                <i class="fas fa-briefcase text-blue-600 w-6"></i>
+                <span class="ml-3 text-gray-600"
+                  >Associate Consultant · Capgemini</span
+                >
+              </div>
+              <div class="flex items-center">
+                <i class="fab fa-linkedin text-blue-600 w-6"></i>
+                <a
+                  href="https://in.linkedin.com/in/saimanikanta-ragi-700b4617b"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="ml-3 text-blue-600 hover:text-blue-700 transition duration-300"
+                  >linkedin.com/in/saimanikanta-ragi</a
+                >
               </div>
             </div>
           </div>
           <div>
-            <form class="bg-white p-6 rounded-lg shadow-lg">
+            <form
+              class="bg-[#161B22] p-6 rounded-lg shadow-lg border border-gray-200"
+            >
               <h3 class="text-xl font-semibold mb-4 text-gray-800">
-                Send us a Message
+                Send a Message
               </h3>
               <div class="space-y-4">
                 <div>
                   <label
                     for="name"
-                    class="block text-sm font-medium text-gray-700 mb-1"
+                    class="block text-sm font-medium text-gray-400 mb-1"
                     >Name</label
                   >
                   <input
                     type="text"
                     id="name"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
                   <label
                     for="email"
-                    class="block text-sm font-medium text-gray-700 mb-1"
+                    class="block text-sm font-medium text-gray-400 mb-1"
                     >Email</label
                   >
                   <input
                     type="email"
                     id="email"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
                   <label
                     for="message"
-                    class="block text-sm font-medium text-gray-700 mb-1"
+                    class="block text-sm font-medium text-gray-400 mb-1"
                     >Message</label
                   >
                   <textarea
                     id="message"
                     rows="4"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   ></textarea>
                 </div>
                 <button
                   type="submit"
-                  class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300"
+                  class="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg hover:bg-blue-700 transition duration-300 font-semibold"
                 >
                   Send Message
                 </button>

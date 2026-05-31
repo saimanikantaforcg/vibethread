@@ -1,44 +1,102 @@
 /* =============================================================================
-   Salesforce Einstein Personalization — E-Com Demo Sitemap
-   Site: VibeThread — https://shop.mikesdemos.com
-   Data Cloud Web SDK (SalesforceInteractions)
-
-   UPLOAD: Data Cloud > Website Connectors > [connector] > Sitemap > Upload Sitemap
-   DEBUG:  https://shop.mikesdemos.com/index.html?sf_personalization_wpm — check console
-   DOCS:   https://developer.salesforce.com/docs/marketing/einstein-personalization/guide/integrate-salesforce-interactions-sdk.html
+   Salesforce Data Cloud Web SDK / Einstein Personalization Sitemap
+   Site: VibeThread
+   Purpose: Schema-aligned event capture
+   Event Types Used:
+   - browse
+   - catalog
+   - cart
+   - order
+   - contactPointEmail
+   - identity
    ============================================================================= */
 
-/* =============================================================================
-   SECTION 1 — LOGGING
-   Remove or comment out before uploading to production.
-   ============================================================================= */
 SalesforceInteractions.setLoggingLevel(100);
 
 /* =============================================================================
-   SECTION 2 — GLOBAL HELPERS
-   Functions exposed on window so the site's own JS can call them directly.
+   HELPERS
    ============================================================================= */
 
-/**
- * Fires a contactPointEmail event.
- * Called from site JS on any email capture: window.sfepCaptureEmail(emailValue)
- */
+function getQueryParam(paramName) {
+  return new URLSearchParams(window.location.search).get(paramName);
+}
+
+function getCurrentUrl() {
+  return window.location.href;
+}
+
+function getPageLocale() {
+  return document.documentElement.lang || navigator.language || "en-US";
+}
+
+function getProductId() {
+  return getQueryParam("id") || "unknown";
+}
+
+function getProductUrl() {
+  const productId = getProductId();
+  return window.location.origin + window.location.pathname + "?id=" + productId;
+}
+
+function getText(selector, fallbackValue) {
+  const value = SalesforceInteractions.cashDom(selector).text();
+  return value && value.trim() ? value.trim() : fallbackValue || "";
+}
+
+function getValue(selector, fallbackValue) {
+  const value = SalesforceInteractions.cashDom(selector).val();
+  return value && String(value).trim()
+    ? String(value).trim()
+    : fallbackValue || "";
+}
+
+function parseMoneyFromSelector(selector) {
+  const raw = SalesforceInteractions.cashDom(selector).text() || "0";
+  return parseFloat(raw.replace(/[^0-9.]/g, "")) || 0;
+}
+
+function getLastOrder() {
+  try {
+    return JSON.parse(localStorage.getItem("vibeThreadLastOrder") || "null");
+  } catch (_) {
+    return null;
+  }
+}
+
+function getActiveOptionText(containerSelector) {
+  const active = SalesforceInteractions.cashDom(
+    containerSelector + " .bg-blue-600",
+  );
+
+  return active.length ? active.text().trim() : "";
+}
+
+/* =============================================================================
+   PROFILE / IDENTITY HELPERS
+   ============================================================================= */
+
 window.sfepCaptureEmail = function(emailValue) {
+  if (!emailValue) {
+    return;
+  }
+
   SalesforceInteractions.sendEvent({
-    interaction: { name: "emailCapture" },
+    interaction: {
+      name: "emailCapture",
+    },
     user: {
       attributes: {
         eventType: "contactPointEmail",
         email: emailValue,
+        sourceUrl: getCurrentUrl(),
+        sourceChannel: "web",
+        sourceLocale: getPageLocale(),
+        sourcePageType: "email_capture",
       },
     },
   });
 };
 
-/**
- * Fires an identity event with name and email.
- * Called on account creation / profile update.
- */
 window.sfepCaptureIdentity = function({
   firstName,
   lastName,
@@ -46,7 +104,9 @@ window.sfepCaptureIdentity = function({
   phoneNumber,
 } = {}) {
   SalesforceInteractions.sendEvent({
-    interaction: { name: "identityCapture" },
+    interaction: {
+      name: "identityCapture",
+    },
     user: {
       attributes: {
         eventType: "identity",
@@ -55,467 +115,446 @@ window.sfepCaptureIdentity = function({
         lastName: lastName || "",
         email: email || "",
         phoneNumber: phoneNumber || "",
+        sourceUrl: getCurrentUrl(),
+        sourceChannel: "web",
+        sourceLocale: getPageLocale(),
+        sourcePageType: "identity_capture",
       },
     },
   });
 };
 
 /* =============================================================================
-   SECTION 3 — PERSONALIZATION TRANSFORMER INITIALIZATION
-   Registers Handlebars templates for Personalization Points.
-   Must run BEFORE SalesforceInteractions.init().
+   SDK INIT + SITEMAP
    ============================================================================= */
-try {
-  SalesforceInteractions.Personalization.Config.initialize({
-    customFlickerDefenseConfig: {
-      redisplayTimeoutMilliseconds: 2000,
-      renderPersonalizationAfterTimeoutElapsed: false,
-    },
-    additionalTransformers: [
-      /* --- SimpleRecs ---------------------------------------------------
-           Horizontal product recommendation carousel.
-           Field names reference Salesforce Goods Product DMO API names.
-           ------------------------------------------------------------------ */
-      {
-        name: "SimpleRecs",
-        transformerType: "Handlebars",
-        substitutionDefinitions: {
-          recs: { defaultValue: "[data]" },
-          id: { defaultValue: "[ssot__Id__c]" },
-          image: { defaultValue: "[ImageURL__c]" },
-          name: { defaultValue: "[ssot__Name__c]" },
-          price: { defaultValue: "[UnitPrice__c]" },
-          url: { defaultValue: "[ProductUrl__c]" },
-        },
-        transformerTypeDetails: {
-          html: `
-                    <div class="sfep-recs-carousel" style="display:flex;gap:16px;overflow-x:auto;padding:16px 0;">
-                        {{#each (subVar 'recs')}}
-                            <div class="sfep-recs-item"
-                                 style="min-width:180px;text-align:center;"
-                                 data-sf-personalization-click='{"object-id":"{{subVar "id"}}","content-id":"{{subVar "id"}}"}'
-                                 data-sf-personalization-view='{"destination":"Product"}'>
-                                <a href="product.html?id={{subVar 'id'}}" style="text-decoration:none;color:inherit;">
-                                    <img src="{{subVar 'image'}}" alt="{{subVar 'name'}}"
-                                         style="width:160px;height:160px;object-fit:cover;border-radius:8px;" />
-                                    <p class="sfep-recs-name" style="font-weight:600;margin:8px 0 4px;">{{subVar 'name'}}</p>
-                                    <p class="sfep-recs-price" style="color:#2563eb;">$\{{subVar 'price'}}</p>
-                                </a>
-                            </div>
-                        {{/each}}
-                    </div>
-                `,
-        },
-      },
 
-      /* --- SimpleHero ---------------------------------------------------
-           Hero banner with background image, headline, and CTA button.
-           Attributes are set in the Personalization Decision.
-           ------------------------------------------------------------------ */
-      {
-        name: "SimpleHero",
-        transformerType: "Handlebars",
-        substitutionDefinitions: {
-          BackgroundImageUrl: {
-            defaultValue: "[attributes].[BackgroundImageUrl]",
-          },
-          Header: { defaultValue: "[attributes].[Header]" },
-          Subheader: { defaultValue: "[attributes].[Subheader]" },
-          CallToActionUrl: { defaultValue: "[attributes].[CallToActionUrl]" },
-          CallToActionText: { defaultValue: "[attributes].[CallToActionText]" },
-        },
-        transformerTypeDetails: {
-          html: `
-                    <section class="sfep-hero bg-gradient-to-r from-blue-600 to-purple-700 text-white py-20"
-                             style="background: url('{{subVar 'BackgroundImageUrl'}}') no-repeat center center / cover;">
-                        <div class="container mx-auto px-4 text-center">
-                            <h1 class="text-5xl font-bold mb-6">{{subVar 'Header'}}</h1>
-                            <p class="text-xl mb-8 max-w-2xl mx-auto">{{subVar 'Subheader'}}</p>
-                            <a class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300"
-                               href="{{subVar 'CallToActionUrl'}}">
-                                {{subVar 'CallToActionText'}}
-                            </a>
-                        </div>
-                    </section>
-                `,
-        },
-      },
-    ],
-  });
-} catch (e) {
-  console.warn("[sitemap] Personalization.Config.initialize failed:", e);
-}
-
-/* =============================================================================
-   SECTION 4 — SDK INITIALIZATION + SITEMAP CONFIG
-   ============================================================================= */
 SalesforceInteractions.init({
   personalization: {
     dataspace: "default",
   },
-  consents: [
-    {
-      purpose: SalesforceInteractions.ConsentPurpose.Tracking,
-      provider: "Example Consent Manager",
-      status: SalesforceInteractions.ConsentStatus.OptIn,
-    },
-  ],
-}).then(() => {
+}).then(function() {
   const sitemapConfig = {
-    /* -------------------------------------------------------------------
-           GLOBAL — runs on every page
-           ------------------------------------------------------------------- */
     global: {
-      onActionEvent: (event) => {
+      onActionEvent: function(event) {
+        if (!event || !event.interaction) {
+          return event;
+        }
+
+        /* Feed the SF Data Cloud inspector panel */
+        try {
+          window.__vtSfOutbound = window.__vtSfOutbound || [];
+          window.__vtSfOutbound.push({
+            t: Date.now(),
+            e: JSON.parse(JSON.stringify(event)),
+          });
+        } catch (_) {}
+
+        const eventTypeMap = {
+          userEngagement: "browse",
+          UserEngagement: "browse",
+          productEngagement: "catalog",
+          ProductEngagement: "catalog",
+          cartEngagement: "cart",
+          CartEngagement: "cart",
+          orderEngagement: "order",
+          OrderEngagement: "order",
+        };
+
+        if (
+          event.interaction.eventType &&
+          eventTypeMap[event.interaction.eventType]
+        ) {
+          event.interaction.eventType =
+            eventTypeMap[event.interaction.eventType];
+        }
+
+        event.interaction.attributes = event.interaction.attributes || {};
+
+        if (!event.interaction.attributes.sourceUrl) {
+          event.interaction.attributes.sourceUrl = getCurrentUrl();
+        }
+
+        if (!event.interaction.attributes.sourceChannel) {
+          event.interaction.attributes.sourceChannel = "web";
+        }
+
+        if (!event.interaction.attributes.sourceLocale) {
+          event.interaction.attributes.sourceLocale = getPageLocale();
+        }
+
         return event;
       },
     },
 
-    /* -------------------------------------------------------------------
-           PAGE TYPE DEFAULT — catch-all for unmatched pages
-           ------------------------------------------------------------------- */
     pageTypeDefault: {
       name: "default",
       interaction: {
-        name: "default",
-        eventType: "userEngagement",
+        name: "default view",
+        eventType: "browse",
+        attributes: {
+          pageName: function() {
+            return document.title || "Default Page";
+          },
+          pageType: "default",
+          pageUrl: getCurrentUrl,
+          sourcePageType: "default",
+          pageView: 1,
+        },
       },
     },
 
-    /* -------------------------------------------------------------------
-           PAGE TYPES — VibeThread (shop.mikesdemos.com)
-           All URL patterns and DOM selectors confirmed from repo analysis.
-           ------------------------------------------------------------------- */
     pageTypes: [
-      /* ---------------------------------------------------------------
-               HOME PAGE  /index.html or /
-               --------------------------------------------------------------- */
+      /* -----------------------------------------------------------------------
+         HOME PAGE
+         ----------------------------------------------------------------------- */
+
       {
         name: "home",
 
-        isMatch: () =>
-          window.location.pathname === "/" ||
-          window.location.pathname === "/index.html",
+        isMatch: function() {
+          return (
+            window.location.pathname === "/" ||
+            window.location.pathname === "/index.html"
+          );
+        },
 
         interaction: {
           name: "home view",
-          eventType: "userEngagement",
-        },
-
-        contentZones: [
-          // Hero section — SimpleHero transformer replaces this entire section
-          { name: "hero_banner", selector: "section.bg-gradient-to-r" },
-          // Featured Products grid — SimpleRecs injects into this container
-          { name: "recommendations_1", selector: "#featuredProducts" },
-        ],
-      },
-
-      /* ---------------------------------------------------------------
-               PRODUCT LIST PAGE (PLP)  /categories.html?category=men|women|accessories
-               --------------------------------------------------------------- */
-      {
-        name: "plp",
-
-        isMatch: () => window.location.pathname === "/categories.html",
-
-        interaction: {
-          name: "plp view",
-          eventType: "userEngagement",
-          // Capture which category is being browsed
+          eventType: "browse",
           attributes: {
-            browseCategory: () =>
-              new URLSearchParams(window.location.search).get("category") ||
-              "all",
+            pageName: "Home Page",
+            pageType: "home",
+            pageUrl: getCurrentUrl,
+            sourcePageType: "home",
+            pageView: 1,
           },
         },
 
         contentZones: [
-          // Top-of-page blue header banner — SimpleHero can replace/overlay
-          { name: "recs_header", selector: "section.bg-blue-600" },
-          // Product grid — SimpleRecs populates curated/recommended products
-          { name: "recs_featured", selector: "#productsGrid" },
+          {
+            name: "hero_banner",
+            selector: "section[class*='bg-[#161B22]']",
+          },
+          {
+            name: "recommendations_1",
+            selector: "#featuredProducts",
+          },
         ],
       },
 
-      /* ---------------------------------------------------------------
-               PRODUCT DETAIL PAGE (PDP)  /product.html?id={productId}
-               Sends a Catalog interaction with live product attributes from DOM.
-               --------------------------------------------------------------- */
+      /* -----------------------------------------------------------------------
+         PRODUCT LISTING PAGE
+         ----------------------------------------------------------------------- */
+
+      {
+        name: "plp",
+
+        isMatch: function() {
+          return window.location.pathname === "/categories.html";
+        },
+
+        interaction: {
+          name: "plp view",
+          eventType: "browse",
+          attributes: {
+            pageName: function() {
+              const category = getQueryParam("category") || "all";
+              return "Product Listing - " + category;
+            },
+            pageType: "plp",
+            pageUrl: getCurrentUrl,
+            sourcePageType: "plp",
+            pageView: 1,
+          },
+        },
+
+        contentZones: [
+          {
+            name: "recs_header",
+            selector: "#categoryTitle",
+          },
+          {
+            name: "recs_featured",
+            selector: "#productsGrid",
+          },
+        ],
+      },
+
+      /* -----------------------------------------------------------------------
+         PRODUCT DETAIL PAGE
+         Schema eventType: catalog
+         ----------------------------------------------------------------------- */
+
       {
         name: "pdp",
 
-        isMatch: () => window.location.pathname === "/product.html",
+        isMatch: function() {
+          return window.location.pathname === "/product.html";
+        },
 
         interaction: {
           name: "pdp view",
-          eventType: "productEngagement",
+          eventType: "catalog",
+
+          attributes: {
+            sourcePageType: "pdp",
+            sourceUrl: getCurrentUrl,
+            sourceChannel: "web",
+            sourceLocale: getPageLocale,
+            pageView: 1,
+          },
 
           catalogObject: {
             type: "Product",
 
-            // Product ID is the ?id= query parameter
-            id: () =>
-              new URLSearchParams(window.location.search).get("id") ||
-              "unknown",
+            id: function() {
+              return getProductId();
+            },
 
             attributes: {
-              // Text content of #productName h1
               attributeProductName: SalesforceInteractions.resolvers.fromSelector(
                 "#productName",
               ),
 
-              // SKU — use the id parameter as SKU (no separate SKU element in DOM)
-              attributeProductSku: () =>
-                new URLSearchParams(window.location.search).get("id") || "",
+              attributeProductSku: function() {
+                return getProductId();
+              },
 
-              // Canonical page URL
-              attributeProductUrl: () =>
-                window.location.origin +
-                window.location.pathname +
-                "?id=" +
-                (new URLSearchParams(window.location.search).get("id") || ""),
+              attributeProductUrl: function() {
+                return getProductUrl();
+              },
 
-              // src attribute of #productImage
               attributeProductImageUrl: SalesforceInteractions.resolvers.fromSelectorAttribute(
                 "#productImage",
                 "src",
               ),
 
-              // Strip "$" and parse to number from #productPrice
-              attributeUnitPrice: () => {
-                const raw =
-                  SalesforceInteractions.cashDom("#productPrice").text() || "0";
-                return parseFloat(raw.replace(/[^0-9.]/g, "")) || 0;
+              attributeUnitPrice: function() {
+                return parseMoneyFromSelector("#productPrice");
               },
 
-              // Active color option — button with bg-blue-600 class in #colorOptions
-              attributeColor: () => {
-                const active = SalesforceInteractions.cashDom(
-                  "#colorOptions .bg-blue-600",
-                );
-                return active.length ? active.text().trim() : "";
+              attributeColor: function() {
+                return getActiveOptionText("#colorOptions");
               },
 
-              // Active size option — button with bg-blue-600 class in #sizeOptions
-              attributeSize: () => {
-                const active = SalesforceInteractions.cashDom(
-                  "#sizeOptions .bg-blue-600",
-                );
-                return active.length ? active.text().trim() : "";
+              attributeSize: function() {
+                return getActiveOptionText("#sizeOptions");
               },
 
-              // Category from breadcrumb — #breadcrumbCategory
               attributeItemType: SalesforceInteractions.resolvers.fromSelector(
                 "#breadcrumbCategory",
               ),
+
+              attributeInventory: function() {
+                return 1;
+              },
             },
           },
         },
 
         contentZones: [
-          // Related Products section — SimpleRecs populates recommendations
-          { name: "recs_you_may_like", selector: "#relatedProducts" },
-          // Second recommendations zone — reuses related products area for a/b
-          { name: "recs_frequently_bought", selector: "#relatedProducts" },
-        ],
-
-        /* Add-to-Cart listener — fires cartEngagement when user clicks Add to Cart */
-        listeners: [
           {
-            name: "Add to Cart",
-            element: "#addToCartBtn",
-            onEvent: () => {
-              const productId =
-                new URLSearchParams(window.location.search).get("id") ||
-                "unknown";
-              const qtyText =
-                SalesforceInteractions.cashDom("#quantity").text() || "1";
-              const priceText =
-                SalesforceInteractions.cashDom("#productPrice").text() || "0";
-              const quantity = parseInt(qtyText, 10) || 1;
-              const price = parseFloat(priceText.replace(/[^0-9.]/g, "")) || 0;
-
-              return {
-                interaction: {
-                  name: "addToCart",
-                  eventType: "cartEngagement",
-                  catalogObject: {
-                    type: "Product",
-                    id: productId,
-                  },
-                  lineItem: {
-                    catalogObjectType: "Product",
-                    catalogObjectId: productId,
-                    quantity: quantity,
-                    price: price,
-                  },
-                },
-              };
-            },
+            name: "recs_you_may_like",
+            selector: "#relatedProducts",
+          },
+          {
+            name: "recs_frequently_bought",
+            selector: "#relatedProducts",
           },
         ],
       },
 
-      /* ---------------------------------------------------------------
-               CART PAGE  /cart.html
-               --------------------------------------------------------------- */
+      /* -----------------------------------------------------------------------
+         CART PAGE
+         ----------------------------------------------------------------------- */
+
       {
         name: "cart",
 
-        isMatch: () => window.location.pathname === "/cart.html",
+        isMatch: function() {
+          return window.location.pathname === "/cart.html";
+        },
 
         interaction: {
           name: "cart view",
-          eventType: "cartEngagement",
+          eventType: "cart",
+          attributes: {
+            sourcePageType: "cart",
+            sourceUrl: getCurrentUrl,
+            sourceChannel: "web",
+            sourceLocale: getPageLocale,
+            pageView: 1,
+          },
         },
 
         contentZones: [
-          // Upsell zone — injected after cart items list in the left column
-          { name: "recs_upsell", selector: "#cartPageItems" },
+          {
+            name: "recs_upsell",
+            selector: "#cartPageItems",
+          },
         ],
       },
 
-      /* ---------------------------------------------------------------
-               CHECKOUT PAGE  /checkout.html
-               --------------------------------------------------------------- */
+      /* -----------------------------------------------------------------------
+         CHECKOUT PAGE
+         ----------------------------------------------------------------------- */
+
       {
         name: "checkout",
 
-        isMatch: () => window.location.pathname === "/checkout.html",
+        isMatch: function() {
+          return window.location.pathname === "/checkout.html";
+        },
 
         interaction: {
           name: "checkout view",
-          eventType: "userEngagement",
+          eventType: "browse",
+          attributes: {
+            pageName: "Checkout Page",
+            pageType: "checkout",
+            pageUrl: getCurrentUrl,
+            sourcePageType: "checkout",
+            pageView: 1,
+          },
         },
 
         contentZones: [
-          // Last-chance zone — injected above the payment button
-          { name: "recs_last_chance", selector: "#checkoutItems" },
-        ],
-
-        /* Order completion listener — fires when Face Pay button is clicked */
-        listeners: [
           {
-            name: "Face Pay — Order Complete",
-            element: "#facePayBtn",
-            onEvent: () => {
-              // Read total from checkout summary
-              const totalText =
-                SalesforceInteractions.cashDom("#checkoutTotal").text() || "0";
-              const total = parseFloat(totalText.replace(/[^0-9.]/g, "")) || 0;
-
-              return {
-                interaction: {
-                  name: "order complete",
-                  eventType: "orderEngagement",
-                  order: {
-                    id: "ORDER-" + Date.now(), // no order ID in DOM — use timestamp
-                    totalValue: total,
-                    currency: "USD",
-                  },
-                },
-              };
-            },
+            name: "recs_last_chance",
+            selector: "#checkoutItems",
           },
         ],
       },
 
-      /* ---------------------------------------------------------------
-               LOGIN / REGISTER PAGE  /login.html
-               Captures email on sign-in and full identity on registration.
-               --------------------------------------------------------------- */
+      /* -----------------------------------------------------------------------
+         LOGIN PAGE
+         ----------------------------------------------------------------------- */
+
       {
         name: "login",
 
-        isMatch: () => window.location.pathname === "/login.html",
+        isMatch: function() {
+          return window.location.pathname === "/login.html";
+        },
 
         interaction: {
           name: "login view",
-          eventType: "userEngagement",
+          eventType: "browse",
+          attributes: {
+            pageName: "Login Page",
+            pageType: "login",
+            pageUrl: getCurrentUrl,
+            sourcePageType: "login",
+            pageView: 1,
+          },
         },
 
-        listeners: [
-          /* Sign-in form — capture email on submit */
-          {
-            name: "Sign In Submit",
-            element: "#loginFormForm",
-            onEvent: ({ sourceEvent }) => {
-              sourceEvent.preventDefault();
-              const email =
-                SalesforceInteractions.cashDom("#loginEmail").val() || "";
-              if (email) {
-                window.sfepCaptureEmail(email);
-              }
-              return null;
-            },
-          },
-
-          /* Registration form — capture full identity on submit */
-          {
-            name: "Create Account Submit",
-            element: "#registerFormForm",
-            onEvent: ({ sourceEvent }) => {
-              sourceEvent.preventDefault();
-              window.sfepCaptureIdentity({
-                firstName:
-                  SalesforceInteractions.cashDom("#firstName").val() || "",
-                lastName:
-                  SalesforceInteractions.cashDom("#lastName").val() || "",
-                email:
-                  SalesforceInteractions.cashDom("#registerEmail").val() || "",
-              });
-              return null;
-            },
-          },
-        ],
+        listeners: [],
       },
 
-      /* ---------------------------------------------------------------
-               ABOUT PAGE  /about.html
-               Captures email from contact form.
-               --------------------------------------------------------------- */
+      /* -----------------------------------------------------------------------
+         ABOUT PAGE
+         ----------------------------------------------------------------------- */
+
       {
         name: "about",
 
-        isMatch: () => window.location.pathname === "/about.html",
+        isMatch: function() {
+          return window.location.pathname === "/about.html";
+        },
 
         interaction: {
           name: "about view",
-          eventType: "userEngagement",
+          eventType: "browse",
+          attributes: {
+            pageName: "About Page",
+            pageType: "about",
+            pageUrl: getCurrentUrl,
+            sourcePageType: "about",
+            pageView: 1,
+          },
         },
 
         listeners: [
-          /* Contact form — capture email on submit */
           {
             name: "Contact Form Submit",
             element: "form",
-            onEvent: ({ sourceEvent }) => {
-              sourceEvent.preventDefault();
-              const email =
-                SalesforceInteractions.cashDom("#email").val() || "";
+
+            onEvent: function(eventObject) {
+              const email = getValue("#email", "");
+
               if (email) {
                 window.sfepCaptureEmail(email);
               }
+
               return null;
             },
           },
         ],
       },
-    ], // end pageTypes
-  }; // end sitemapConfig
+
+      {
+        name: "thank_you",
+
+        isMatch: function() {
+          return window.location.pathname === "/thank-you.html";
+        },
+
+        interaction: {
+          name: "order confirmation view",
+          eventType: "order",
+          attributes: {
+            pageName: "Order Confirmation",
+            pageType: "thank_you",
+            pageUrl: getCurrentUrl,
+            sourcePageType: "thank_you",
+            pageView: 1,
+          },
+          order: {
+            id: function() {
+              const order = getLastOrder();
+              return order && order.id ? String(order.id) : "";
+            },
+            totalValue: function() {
+              const order = getLastOrder();
+              return order && typeof order.total === "number" ? order.total : 0;
+            },
+            currency: "USD",
+            lineItems: function() {
+              const order = getLastOrder();
+              const items =
+                order && Array.isArray(order.items) ? order.items : [];
+
+              return items.map(function(item) {
+                const price =
+                  typeof item.unitPrice === "number"
+                    ? item.unitPrice
+                    : typeof item.price === "number"
+                    ? item.price
+                    : 0;
+
+                return {
+                  catalogObjectType: "Product",
+                  catalogObjectId: String(item.productId || ""),
+                  quantity: item.quantity || 1,
+                  price: price,
+                };
+              });
+            },
+          },
+        },
+      },
+    ],
+  };
 
   SalesforceInteractions.initSitemap(sitemapConfig);
 
-  /* =========================================================================
-       SECTION 5 — SPA SUPPORT
-       Detects URL changes (hash or pushState) and reinitializes the sitemap.
-       ========================================================================= */
   let currentUrl = window.location.href;
 
-  setInterval(() => {
+  setInterval(function() {
     if (currentUrl !== window.location.href) {
       currentUrl = window.location.href;
       SalesforceInteractions.reinit();
     }
   }, 500);
-}); // end SalesforceInteractions.init().then()
+});

@@ -1,4 +1,11 @@
 // Shopping Cart functionality
+function _escCart(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
 class ShoppingCart {
   constructor() {
     this.items = this.loadCart();
@@ -28,7 +35,7 @@ class ShoppingCart {
       (item) =>
         item.productId === productId &&
         item.size === size &&
-        item.color === color
+        item.color === color,
     );
 
     if (existingItemIndex > -1) {
@@ -54,7 +61,7 @@ class ShoppingCart {
         quantity,
         size,
         color,
-        this.getTotal()
+        this.getTotal(),
       );
     }
 
@@ -71,7 +78,7 @@ class ShoppingCart {
           item.productId === productId &&
           item.size === size &&
           item.color === color
-        )
+        ),
     );
 
     this.saveCart();
@@ -82,7 +89,7 @@ class ShoppingCart {
         product,
         size,
         color,
-        this.getTotal()
+        this.getTotal(),
       );
     }
   }
@@ -93,7 +100,7 @@ class ShoppingCart {
       (item) =>
         item.productId === productId &&
         item.size === size &&
-        item.color === color
+        item.color === color,
     );
 
     if (itemIndex > -1) {
@@ -122,8 +129,8 @@ class ShoppingCart {
         typeof item.unitPrice === "number"
           ? item.unitPrice
           : product
-            ? product.price
-            : 0;
+          ? product.price
+          : 0;
       return total + unitPrice * item.quantity;
     }, 0);
   }
@@ -159,38 +166,42 @@ class ShoppingCart {
         const sizeArg = JSON.stringify(item.size);
         const colorArg = JSON.stringify(item.color);
         const imageClass = compact ? "w-16 h-16" : "w-20 h-20";
-        const itemNameClass = compact ? "font-semibold text-sm" : "font-semibold";
+        const itemNameClass = compact
+          ? "font-semibold text-sm"
+          : "font-semibold";
         const unitPrice =
-          typeof item.unitPrice === "number"
-            ? item.unitPrice
-            : product.price;
+          typeof item.unitPrice === "number" ? item.unitPrice : product.price;
 
         return `
           <div class="flex items-center space-x-4 py-4 border-b last:border-b-0">
-            <img src="${product.image}" alt="${product.name}" class="${imageClass} object-cover rounded">
+            <img src="${_escCart(product.image)}" alt="${_escCart(
+          product.name,
+        )}" class="${imageClass} object-cover rounded">
             <div class="flex-1">
-              <h4 class="${itemNameClass}">${product.name}</h4>
+              <h4 class="${itemNameClass}">${_escCart(product.name)}</h4>
               <p class="text-xs text-gray-500">
-                ${item.size ? `Size: ${item.size}` : ""}
-                ${item.color ? `Color: ${item.color}` : ""}
+                ${item.size ? `Size: ${_escCart(item.size)}` : ""}
+                ${item.color ? `Color: ${_escCart(item.color)}` : ""}
               </p>
               <div class="flex items-center space-x-2 mt-1">
-                <button onclick="cart.updateQuantity(${item.productId}, ${
-          item.quantity - 1
-        }, ${sizeArg}, ${colorArg})"
+                <button onclick="cart.updateQuantity(${
+                  item.productId
+                }, ${item.quantity - 1}, ${sizeArg}, ${colorArg})"
                   class="w-7 h-7 bg-gray-200 rounded text-xs hover:bg-gray-300">-</button>
                 <span class="text-sm">${item.quantity}</span>
-                <button onclick="cart.updateQuantity(${item.productId}, ${
-          item.quantity + 1
-        }, ${sizeArg}, ${colorArg})"
+                <button onclick="cart.updateQuantity(${
+                  item.productId
+                }, ${item.quantity + 1}, ${sizeArg}, ${colorArg})"
                   class="w-7 h-7 bg-gray-200 rounded text-xs hover:bg-gray-300">+</button>
               </div>
             </div>
             <div class="text-right">
               <p class="font-semibold">${ProductUtils.formatPrice(
-                unitPrice * item.quantity
+                unitPrice * item.quantity,
               )}</p>
-              <button onclick="cart.removeItem(${item.productId}, ${sizeArg}, ${colorArg})"
+              <button onclick="cart.removeItem(${
+                item.productId
+              }, ${sizeArg}, ${colorArg})"
                 class="text-red-500 hover:text-red-700 text-xs">Remove</button>
             </div>
           </div>
@@ -258,10 +269,16 @@ class ShoppingCart {
     if (checkoutBtn) {
       checkoutBtn.disabled = this.items.length === 0;
       checkoutBtn.classList.toggle("opacity-50", this.items.length === 0);
-      checkoutBtn.classList.toggle("cursor-not-allowed", this.items.length === 0);
+      checkoutBtn.classList.toggle(
+        "cursor-not-allowed",
+        this.items.length === 0,
+      );
     }
 
-    if (!this.hasTrackedCartPageView && typeof dataLayerManager !== "undefined") {
+    if (
+      !this.hasTrackedCartPageView &&
+      typeof dataLayerManager !== "undefined"
+    ) {
       dataLayerManager.trackCartPageView(this.items, subtotal);
       this.hasTrackedCartPageView = true;
     }
@@ -298,7 +315,10 @@ class ShoppingCart {
     setText("checkoutTax", ProductUtils.formatPrice(tax));
     setText("checkoutTotal", ProductUtils.formatPrice(total));
 
-    if (!this.hasTrackedCheckoutPageView && typeof dataLayerManager !== "undefined") {
+    if (
+      !this.hasTrackedCheckoutPageView &&
+      typeof dataLayerManager !== "undefined"
+    ) {
       dataLayerManager.trackCheckoutPageView(this.items, subtotal);
       this.hasTrackedCheckoutPageView = true;
     }
@@ -312,9 +332,11 @@ class ShoppingCart {
     notification.innerHTML = `
       <div class="flex items-center space-x-2">
         <i class="fas fa-check-circle"></i>
-        <span>${productName} added to cart!</span>
+        <span></span>
       </div>
     `;
+    notification.querySelector("span").textContent =
+      productName + " added to cart!";
 
     document.body.appendChild(notification);
 
@@ -343,7 +365,10 @@ class ShoppingCart {
         this.hideCartModal();
       }
 
-      if (e.target.closest("#clearCart") || e.target.closest("#clearCartPage")) {
+      if (
+        e.target.closest("#clearCart") ||
+        e.target.closest("#clearCartPage")
+      ) {
         if (confirm("Are you sure you want to clear your cart?")) {
           this.clearCart();
         }
@@ -467,12 +492,12 @@ class ShoppingCart {
 
       alert(
         `Face Payment approved. ${itemCount} item(s) purchased for ${ProductUtils.formatPrice(
-          total
-        )}.`
+          total,
+        )}.`,
       );
 
       window.location.href = `thank-you.html?order=${encodeURIComponent(
-        order.id
+        order.id,
       )}`;
     }, 2000);
   }
