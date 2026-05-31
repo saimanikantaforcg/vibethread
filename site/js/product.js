@@ -4,7 +4,7 @@ let selectedSize = null;
 let selectedColor = null;
 let currentQuantity = 1;
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
   initializeProductPage();
 });
 
@@ -40,6 +40,37 @@ function loadProductDetails() {
   if (typeof dataLayerManager !== "undefined" && currentProduct) {
     dataLayerManager.trackViewItem(currentProduct);
   }
+
+  // Send catalog event to Data Cloud with fully populated attributes
+  sendDataCloudCatalogEvent(currentProduct);
+}
+
+function sendDataCloudCatalogEvent(product) {
+  // Use the actual c360a SDK: getSalesforceInteractions() returns the API
+  const getApi = window.getSalesforceInteractions;
+  if (typeof getApi !== "function") return;
+
+  const api = getApi();
+  if (!api || typeof api.sendEvent !== "function") return;
+
+  api.sendEvent({
+    interaction: {
+      name: "View Catalog Object",
+      catalogObject: {
+        type: "Product",
+        id: product.id.toString(),
+        attributes: {
+          productName: product.name,
+          productSku: product.id.toString(),
+          productUrl: window.location.href,
+          unitPrice: product.price,
+          color: product.colors ? product.colors.join(", ") : "",
+          itemType: product.category || "",
+          inventory: 1
+        }
+      }
+    }
+  });
 }
 
 // Display product details
@@ -48,8 +79,9 @@ function displayProductDetails() {
 
   // Update basic product info
   document.getElementById("productName").textContent = currentProduct.name;
-  document.getElementById("productPrice").textContent =
-    ProductUtils.formatPrice(currentProduct.price);
+  document.getElementById(
+    "productPrice",
+  ).textContent = ProductUtils.formatPrice(currentProduct.price);
   document.getElementById("productDescription").textContent =
     currentProduct.description;
 
@@ -85,11 +117,10 @@ function updateProductThumbnails() {
     .map(
       (image, index) => `
         <button onclick="changeMainImage('${image}')" class="border-2 border-gray-200 rounded-lg overflow-hidden hover:border-blue-500 transition duration-300">
-            <img src="${image}" alt="Product thumbnail ${
-        index + 1
-      }" class="w-full h-20 object-cover">
+            <img src="${image}" alt="Product thumbnail ${index +
+        1}" class="w-full h-20 object-cover">
         </button>
-    `
+    `,
     )
     .join("");
 }
@@ -123,7 +154,7 @@ function updateSizeOptions() {
                     data-size="${size}">
                 ${size}
             </button>
-        `
+        `,
       )
       .join("");
 
@@ -155,12 +186,12 @@ function updateColorOptions() {
                     data-color="${color}">
                 <div class="flex items-center space-x-2">
                     <div class="w-4 h-4 rounded-full border" style="background-color: ${getColorHex(
-                      color
+                      color,
                     )}"></div>
                     <span>${color}</span>
                 </div>
             </button>
-        `
+        `,
       )
       .join("");
 
@@ -303,7 +334,7 @@ function addToCart() {
     currentProduct.id,
     currentQuantity,
     selectedSize,
-    selectedColor
+    selectedColor,
   );
 
   if (success) {
@@ -357,20 +388,22 @@ function createRelatedProductCard(product) {
                 </div>
             </div>
             <div class="p-4">
-                <h4 class="font-semibold text-gray-800 mb-2 hover:text-blue-600 cursor-pointer" onclick="viewProduct(${
-                  product.id
-                })">${product.name}</h4>
+                <h4 class="font-semibold text-gray-800 mb-2">
+                    <a href="product.html?id=${encodeURIComponent(
+                      product.id,
+                    )}" class="hover:text-blue-600">${product.name}</a>
+                </h4>
                 <p class="text-gray-600 text-sm mb-3 line-clamp-2">${
                   product.description
                 }</p>
                 <div class="flex items-center justify-between">
                     <span class="text-lg font-bold text-blue-600">${ProductUtils.formatPrice(
-                      product.price
+                      product.price,
                     )}</span>
-                    <button onclick="viewProduct(${product.id})" 
-                            class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300 text-sm">
+                    <a href="product.html?id=${encodeURIComponent(product.id)}" 
+                       class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300 text-sm inline-flex items-center">
                         View
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -408,5 +441,9 @@ function updateBreadcrumb() {
 
 // View product (for related products)
 function viewProduct(productId) {
-  window.location.href = `product.html?id=${productId}`;
+  const normalizedId = Number.parseInt(productId, 10);
+  if (Number.isNaN(normalizedId)) return;
+  window.location.href = `product.html?id=${encodeURIComponent(normalizedId)}`;
 }
+
+window.viewProduct = viewProduct;

@@ -1,5 +1,5 @@
 // Categories page functionality
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
   initializeCategoryPage();
 });
 
@@ -86,14 +86,16 @@ function createProductCard(product) {
                 </div>
                 <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition duration-300">
                     <span class="bg-blue-600 text-white px-2 py-1 rounded text-xs font-semibold">${getCategoryDisplayName(
-                      product.category
+                      product.category,
                     )}</span>
                 </div>
             </div>
             <div class="p-4">
-                <h3 class="font-semibold text-gray-800 mb-2 hover:text-blue-600 cursor-pointer" onclick="viewProduct(${
-                  product.id
-                })">${product.name}</h3>
+                <h3 class="font-semibold text-gray-800 mb-2">
+                    <a href="product.html?id=${encodeURIComponent(
+                      product.id,
+                    )}" class="hover:text-blue-600">${product.name}</a>
+                </h3>
                 <p class="text-gray-600 text-sm mb-3 line-clamp-2">${
                   product.description
                 }</p>
@@ -109,14 +111,13 @@ function createProductCard(product) {
                               .slice(0, 4)
                               .map(
                                 (size) =>
-                                  `<span class="text-xs bg-gray-100 px-2 py-1 rounded">${size}</span>`
+                                  `<span class="text-xs bg-gray-100 px-2 py-1 rounded">${size}</span>`,
                               )
                               .join("")}
                             ${
                               product.sizes.length > 4
-                                ? `<span class="text-xs text-gray-500">+${
-                                    product.sizes.length - 4
-                                  }</span>`
+                                ? `<span class="text-xs text-gray-500">+${product
+                                    .sizes.length - 4}</span>`
                                 : ""
                             }
                         </div>
@@ -134,15 +135,14 @@ function createProductCard(product) {
                               .map(
                                 (color) =>
                                   `<div class="w-4 h-4 rounded-full border" style="background-color: ${getColorHex(
-                                    color
-                                  )}" title="${color}"></div>`
+                                    color,
+                                  )}" title="${color}"></div>`,
                               )
                               .join("")}
                             ${
                               product.colors.length > 3
-                                ? `<span class="text-xs text-gray-500">+${
-                                    product.colors.length - 3
-                                  }</span>`
+                                ? `<span class="text-xs text-gray-500">+${product
+                                    .colors.length - 3}</span>`
                                 : ""
                             }
                         </div>
@@ -153,13 +153,15 @@ function createProductCard(product) {
                 
                 <div class="flex items-center justify-between">
                     <span class="text-xl font-bold text-blue-600">${ProductUtils.formatPrice(
-                      product.price
+                      product.price,
                     )}</span>
                     <div class="flex space-x-2">
-                        <button onclick="viewProduct(${product.id})" 
-                                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-300 text-sm font-medium">
+                        <a href="product.html?id=${encodeURIComponent(
+                          product.id,
+                        )}" 
+                           class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-300 text-sm font-medium inline-flex items-center">
                             View Details
-                        </button>
+                        </a>
                         <button onclick="showQuickAdd(${product.id})" 
                                 class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 text-sm font-medium">
                             <i class="fas fa-cart-plus mr-1"></i>Add
@@ -235,7 +237,7 @@ function showQuickAdd(productId) {
                     <div>
                         <h4 class="font-semibold">${product.name}</h4>
                         <p class="text-blue-600 font-bold">${ProductUtils.formatPrice(
-                          product.price
+                          product.price,
                         )}</p>
                     </div>
                 </div>
@@ -249,7 +251,7 @@ function showQuickAdd(productId) {
                             ${product.sizes
                               .map(
                                 (size) =>
-                                  `<option value="${size}">${size}</option>`
+                                  `<option value="${size}">${size}</option>`,
                               )
                               .join("")}
                         </select>
@@ -267,7 +269,7 @@ function showQuickAdd(productId) {
                             ${product.colors
                               .map(
                                 (color) =>
-                                  `<option value="${color}">${color}</option>`
+                                  `<option value="${color}">${color}</option>`,
                               )
                               .join("")}
                         </select>
@@ -340,7 +342,7 @@ function initializeFilters() {
   const filterButtons = document.querySelectorAll(".category-filter");
 
   filterButtons.forEach((button) => {
-    button.addEventListener("click", function () {
+    button.addEventListener("click", function() {
       const category = this.dataset.category;
       updateURL({ category: category === "all" ? null : category });
       loadCategoryProducts();
@@ -353,7 +355,7 @@ function initializeSorting() {
   const sortSelect = document.getElementById("sortSelect");
 
   if (sortSelect) {
-    sortSelect.addEventListener("change", function () {
+    sortSelect.addEventListener("change", function() {
       loadCategoryProducts();
     });
   }
@@ -442,8 +444,12 @@ function updateURL(params) {
 
 // View product details
 function viewProduct(productId) {
-  window.location.href = `product.html?id=${productId}`;
+  const normalizedId = Number.parseInt(productId, 10);
+  if (Number.isNaN(normalizedId)) return;
+  window.location.href = `product.html?id=${encodeURIComponent(normalizedId)}`;
 }
+
+window.viewProduct = viewProduct;
 
 // Toggle wishlist (placeholder)
 function toggleWishlist(productId) {

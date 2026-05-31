@@ -1,9 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Product - VibeThread</title>
+    <meta
+      name="description"
+      content="Shop premium fashion at VibeThread. Browse our curated clothing and accessories with detailed product views."
+    />
 
     <!-- DataLayer initialization -->
     <script>
@@ -11,12 +15,49 @@
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.c360a.salesforce.com/beacon/c360a/ef0e581a-df74-4390-804c-ac8b59ca6188/scripts/c360a.min.js"></script>
+    <!-- Salesforce SDK: managed via sf-config.js — set your Beacon ID using the ⚙ SDK Setup panel -->
+    <script src="js/sf-config.js"></script>
+    <script src="js/sf-bridge.js"></script>
 
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+            colors: {
+              white: "#161B22" /* Dark panel color */,
+              gray: {
+                50: "#0D1117" /* Darkest background */,
+                100: "#21262D" /* Slightly lighter for hover elements */,
+                200: "#30363D" /* Borders / secondary background */,
+                300: "#484F58" /* Borders */,
+                400: "#8B949E" /* Muted text */,
+                500: "#8B949E" /* Form text / icons */,
+                600: "#C9D1D9" /* Subheadings */,
+                700: "#C9D1D9" /* Body Text */,
+                800: "#F0F6FC" /* Main headings */,
+              },
+              blue: {
+                600: "#58A6FF" /* Primary Blue Accent */,
+                700: "#79C0FF" /* Primary Blue Hover */,
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="Assets/theme.css" />
   </head>
   <body class="bg-gray-50">
     <!-- Header -->

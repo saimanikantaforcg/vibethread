@@ -3,17 +3,18 @@ class DataLayerManager {
   constructor() {
     // Initialize dataLayer if it doesn't exist
     window.dataLayer = window.dataLayer || [];
-    console.log("DataLayer Manager initialized");
   }
 
   // Push data to dataLayer
   push(data) {
     window.dataLayer.push(data);
-    console.log("DataLayer push:", data);
   }
 
   getCurrentUser() {
-    if (typeof AuthSystem !== "undefined" && typeof AuthSystem.getCurrentUser === "function") {
+    if (
+      typeof AuthSystem !== "undefined" &&
+      typeof AuthSystem.getCurrentUser === "function"
+    ) {
       return AuthSystem.getCurrentUser();
     }
     return null;
@@ -75,7 +76,10 @@ class DataLayerManager {
   getCartSummary(cartItems, cartValue) {
     return {
       cart_total_value: this.formatMoney(cartValue),
-      cart_total_items: cartItems.reduce((count, item) => count + item.quantity, 0),
+      cart_total_items: cartItems.reduce(
+        (count, item) => count + item.quantity,
+        0,
+      ),
     };
   }
 

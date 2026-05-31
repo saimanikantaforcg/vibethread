@@ -1,5 +1,29 @@
 // Authentication System for VibeThread Demo
 class AuthSystem {
+  // Demo seed account — always available even after clearing storage.
+  // Email: demo@vibethread.com  |  Password: demo1234
+  static SEED_USER = AuthSystem._buildSeedUser();
+
+  static _buildSeedUser() {
+    return {
+      id: 1000,
+      firstName: "Demo",
+      lastName: "User",
+      email: "demo@vibethread.com",
+      password: "demo1234",
+      memberSince: "2025-01-01T00:00:00.000Z",
+      loginHistory: [],
+      orders: [],
+      addresses: [],
+      wishlist: [],
+      preferences: {
+        marketingEmail: false,
+        smsUpdates: false,
+        orderUpdates: true,
+      },
+    };
+  }
+
   constructor() {
     this.currentUser = AuthSystem.getCurrentUser();
     this.currentUser = this.ensureCurrentUserDefaults();
@@ -59,7 +83,7 @@ class AuthSystem {
     const index = users.findIndex(
       (u) =>
         u.id === normalized.id ||
-        (u.email || "").toLowerCase().trim() === normalized.email
+        (u.email || "").toLowerCase().trim() === normalized.email,
     );
 
     if (index > -1) {
@@ -127,7 +151,7 @@ class AuthSystem {
     const existingUsers = this.getAllUsers();
     if (
       existingUsers.find(
-        (user) => (user.email || "").toLowerCase().trim() === normalizedEmail
+        (user) => (user.email || "").toLowerCase().trim() === normalizedEmail,
       )
     ) {
       this.showMessage("An account with this email already exists.", "error");
@@ -182,13 +206,13 @@ class AuthSystem {
     const existingUsers = this.getAllUsers();
 
     const index = existingUsers.findIndex(
-      (u) => (u.email || "").toLowerCase().trim() === normalizedEmail
+      (u) => (u.email || "").toLowerCase().trim() === normalizedEmail,
     );
 
     if (index === -1) {
       this.showMessage(
         "No account found with this email. Please register first.",
-        "error"
+        "error",
       );
       return false;
     }
@@ -217,7 +241,8 @@ class AuthSystem {
   switchUserByEmail(email) {
     const existingUsers = this.getAllUsers();
     const user = existingUsers.find(
-      (u) => (u.email || "").toLowerCase().trim() === email.toLowerCase().trim()
+      (u) =>
+        (u.email || "").toLowerCase().trim() === email.toLowerCase().trim(),
     );
     if (!user) {
       this.showMessage("No user found with this email.", "error");
@@ -234,7 +259,14 @@ class AuthSystem {
 
   getAllUsers() {
     const saved = localStorage.getItem("vibeThreadUsers");
-    return saved ? JSON.parse(saved) : [];
+    const users = saved ? JSON.parse(saved) : [];
+    // Always ensure the seed account exists so it survives a cookie/storage clear.
+    const hasSeed = users.some((u) => u.id === AuthSystem.SEED_USER.id);
+    if (!hasSeed) {
+      users.unshift(AuthSystem.SEED_USER);
+      localStorage.setItem("vibeThreadUsers", JSON.stringify(users));
+    }
+    return users;
   }
 
   addUserToDatabase(user) {
@@ -306,7 +338,8 @@ class AuthSystem {
     if (!userIcon) return;
 
     if (this.currentUser) {
-      userIcon.innerHTML = '<i class="fas fa-user-circle text-lg text-blue-600"></i>';
+      userIcon.innerHTML =
+        '<i class="fas fa-user-circle text-lg text-blue-600"></i>';
       userIcon.title = `Logged in as ${this.currentUser.firstName}`;
       userIcon.setAttribute("href", "account.html");
     } else {
@@ -347,7 +380,8 @@ class AuthSystem {
         loginForm.addEventListener("submit", (e) => {
           e.preventDefault();
           const email = document.getElementById("loginEmail")?.value || "";
-          const password = document.getElementById("loginPassword")?.value || "";
+          const password =
+            document.getElementById("loginPassword")?.value || "";
           this.login(email, password);
         });
       }
@@ -382,10 +416,14 @@ class AuthSystem {
       const showLoginBtn = document.getElementById("showLogin");
 
       if (showRegisterBtn) {
-        showRegisterBtn.addEventListener("click", () => this.switchToForm("signup"));
+        showRegisterBtn.addEventListener("click", () =>
+          this.switchToForm("signup"),
+        );
       }
       if (showLoginBtn) {
-        showLoginBtn.addEventListener("click", () => this.switchToForm("signin"));
+        showLoginBtn.addEventListener("click", () =>
+          this.switchToForm("signin"),
+        );
       }
     };
 

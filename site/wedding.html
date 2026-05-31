@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wedding Invitation — Shiva Kumar Gupta &amp; Vijaya Lakshmi (Tejaswini)">
+  <title>Shiva Kumar &amp; Tejaswini — Wedding Invitation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    /* ================================================
+       VARIABLES & RESET
+    ================================================ */
+    :root {
+      --bg:          radial-gradient(circle at 30% 15%, #eef7f2 0%, #dfeee8 100%);
+      --surface:     #f9fbf8;
+      --overlay:     rgba(255,255,255,0.60);
+      --accent:      #9bbfae;
+      --accent-deep: #5f8f7b;
+      --text-dark:   #1a1108;   /* rich warm near-black */
+      --text-mid:    #3a2c1a;   /* warm cocoa dark */
+      --gold-1:      #e6c77a;
+      --gold-2:      #f3e2a9;
+      --gold-3:      #fff5cc;
+      --gold-grad:   linear-gradient(135deg, #e6c77a, #f3e2a9, #fff5cc);
+      --highlight:   rgba(230,199,122,0.25);
+      --sh-base:     0 10px 30px rgba(0,0,0,0.10);
+      --sh-gold:     0 0 20px rgba(230,199,122,0.15);
+      --sh-green:    0 8px 24px rgba(155,191,174,0.20);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--bg);
+      min-height: 100svh;
+      overflow-x: hidden;
+      color: var(--text-dark);
+      position: relative;
+    }
+
+    /* Film-grain noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.028;
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* Soft vignette edges */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(66,110,90,0.13) 100%);
+      pointer-events: none;
+      z-index: 9997;
+    }
+
+    /* ================================================
+       FLOATING PARTICLES
+    ================================================ */
+    #particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      will-change: transform, opacity;
+      animation: float-particle linear infinite;
+    }
+
+    @keyframes float-particle {
+      0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      8%   { opacity: 1; }
+      88%  { opacity: 0.7; }
+      100% { transform: translateY(-8vh)  rotate(360deg); opacity: 0; }
+    }
+
+    /* ================================================
+       SECTION 1 — ENVELOPE LANDING
+    ================================================ */
+    #envelope-scene {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      overflow: hidden;
+      padding: 2rem 1.5rem;
+    }
+
+    .scene-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(155,191,174,0.18) 0%, transparent 55%),
+        radial-gradient(circle at 85% 80%, rgba(230,199,122,0.09) 0%, transparent 50%);
+    }
+
+    /* Subtle dot-grid pattern */
+    .scene-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Ccircle cx='24' cy='24' r='1' fill='%239bbfae' opacity='0.18'/%3E%3C/svg%3E");
+      background-size: 48px 48px;
+    }
+
+    /* Corner flourishes */
+    .corner {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      opacity: 0.30;
+    }
+    .corner svg { width: 100%; height: 100%; }
+    .corner--tl { top: 1.5rem; left: 1.5rem; }
+    .corner--tr { top: 1.5rem; right: 1.5rem; transform: scaleX(-1); }
+    .corner--bl { bottom: 1.5rem; left: 1.5rem; transform: scaleY(-1); }
+    .corner--br { bottom: 1.5rem; right: 1.5rem; transform: scale(-1); }
+
+    .env-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(0.75rem, 3vw, 0.95rem);
+      font-weight: 300;
+      letter-spacing: 0.40em;
+      text-transform: uppercase;
+      color: #b8924a;
+      margin-bottom: 2.5rem;
+      opacity: 0.85;
+    }
+
+    /* Wax seal wrapper — floating + breathing */
+    .wax-seal-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      will-change: transform;
+      animation: seal-breathe 3.6s cubic-bezier(0.45,0.05,0.55,0.95) infinite;
+    }
+
+    @keyframes seal-breathe {
+      0%, 100% { transform: translateY(0)    scale(1.000); }
+      50%       { transform: translateY(-14px) scale(1.022); }
+    }
+
+    .wax-seal-wrap.pressing {
+      animation: none;
+      transform: scale(0.91) translateY(4px);
+      transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    /* Outer ambient glow rings */
+    .glow-ring {
+      position: absolute;
+      border-radius: 50%;
+      will-change: transform, opacity;
+    }
+
+    .glow-ring--gold {
+      width: 230px; height: 230px;
+      background: radial-gradient(circle, rgba(230,199,122,0.22) 0%, transparent 68%);
+      animation: pulse-glow 3.6s ease-in-out infinite;
+    }
+
+    .glow-ring--green {
+      width: 185px; height: 185px;
+      background: radial-gradient(circle, rgba(155,191,174,0.20) 0%, transparent 68%);
+      animation: pulse-glow 3.6s ease-in-out infinite 0.55s;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.55; transform: scale(1.00); }
+      50%       { opacity: 1.00; transform: scale(1.10); }
+    }
+
+    /* Click ripple */
+    .seal-ripple {
+      position: absolute;
+      width: 165px; height: 165px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(230,199,122,0.65);
+      pointer-events: none;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    .seal-ripple.active {
+      animation: ripple-expand 0.85s cubic-bezier(0,0,0.2,1) forwards;
+    }
+
+    @keyframes ripple-expand {
+      0%   { transform: scale(1); opacity: 1; }
+      100% { transform: scale(3.2); opacity: 0; }
+    }
+
+    /* The wax seal disk */
+    .wax-seal {
+      position: relative;
+      width: 165px; height: 165px;
+      border-radius: 50%;
+      background: linear-gradient(148deg, #3d7259, #2a5540, #1c3a2a);
+      box-shadow:
+        0 10px 36px rgba(0,0,0,0.28),
+        0 3px   8px rgba(0,0,0,0.15),
+        inset 0  2px  5px rgba(255,255,255,0.08),
+        inset 0 -3px  8px rgba(0,0,0,0.28),
+        0 0 44px rgba(230,199,122,0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    /* Gold rim via pseudo-element */
+    .wax-seal::before {
+      content: '';
+      position: absolute;
+      inset: -2.5px;
+      border-radius: 50%;
+      background: var(--gold-grad);
+      z-index: -1;
+      opacity: 0.88;
+    }
+
+    /* Inner emboss ring */
+    .wax-seal::after {
+      content: '';
+      position: absolute;
+      inset: 9px;
+      border-radius: 50%;
+      border: 1px solid rgba(230,199,122,0.28);
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.32);
+    }
+
+    .seal-mono {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3.4rem;
+      color: var(--gold-2);
+      text-shadow:
+        0 1px 3px rgba(0,0,0,0.42),
+        0 0 14px rgba(230,199,122,0.38);
+      position: relative;
+      z-index: 3;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .tap-hint {
+      margin-top: 2rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #c4a05a;
+      animation: hint-pulse 2.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes hint-pulse {
+      from { opacity: 0.38; }
+      to   { opacity: 0.85; }
+    }
+
+    /* ================================================
+       INVITATION WRAPPER (revealed on seal tap)
+    ================================================ */
+    #invitation {
+      display: none;
+      opacity: 0;
+      transform: translateY(28px) scale(0.985);
+      transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1), transform 0.85s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    #invitation.revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* ================================================
+       SECTION 2 — FLOATING INVITATION CARD
+    ================================================ */
+    #card-section {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 1.5rem;
+      perspective: 1200px;
+      position: relative;
+    }
+
+    #card-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(249,251,248,0.55) 0%, transparent 75%);
+    }
+
+    .invite-card {
+      position: relative;
+      max-width: 460px;
+      width: 100%;
+      background: rgba(249,251,248,0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 28px;
+      padding: 3.5rem 2.5rem 2.5rem;
+      text-align: center;
+      transform-style: preserve-3d;
+      will-change: transform;
+      animation: card-float 5.5s cubic-bezier(0.45,0.05,0.55,0.95) infinite;
+      box-shadow:
+        var(--sh-base),
+        var(--sh-gold),
+        var(--sh-green),
+        inset 0 0 0 1px rgba(255,255,255,0.72);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s ease;
+    }
+
+    /* Gold gradient border */
+    .invite-card::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 30px;
+      background: linear-gradient(135deg,
+        rgba(230,199,122,0.62),
+        rgba(255,245,204,0.22) 35%,
+        rgba(155,191,174,0.28) 65%,
+        rgba(230,199,122,0.55));
+      z-index: -1;
+    }
+
+    /* Back glow */
+    .invite-card::after {
+      content: '';
+      position: absolute;
+      inset: -28px;
+      border-radius: 50px;
+      background: radial-gradient(ellipse at center, rgba(230,199,122,0.09) 0%, transparent 68%);
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    @keyframes card-float {
+      0%,100% { transform: perspective(1200px) rotateX(3.5deg) rotateY(-3.5deg) translateY(0);   }
+      25%      { transform: perspective(1200px) rotateX(4.5deg) rotateY(-2.5deg) translateY(-9px); }
+      75%      { transform: perspective(1200px) rotateX(2.5deg) rotateY(-4.5deg) translateY(-4px); }
+    }
+
+    .invite-card:active {
+      animation: none;
+      transform: perspective(1200px) rotateX(3deg) rotateY(-3deg) translateZ(22px) scale(1.025);
+      box-shadow:
+        0 22px 50px rgba(0,0,0,0.14),
+        0 0 35px rgba(230,199,122,0.22),
+        var(--sh-green);
+    }
+
+    /* Corner ornaments on card */
+    .card-corner {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      opacity: 0.45;
+    }
+    .card-corner--tl { top: 16px; left: 16px; }
+    .card-corner--tr { top: 16px; right: 16px; transform: scaleX(-1); }
+    .card-corner--bl { bottom: 16px; left: 16px; transform: scaleY(-1); }
+    .card-corner--br { bottom: 16px; right: 16px; transform: scale(-1); }
+
+    .ganesha-wrap {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 1.6rem;
+      position: relative;
+    }
+
+    /* Glow behind Om symbol */
+    .ganesha-wrap::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(230,199,122,0.25) 0%, transparent 70%);
+      z-index: 0;
+    }
+
+    .om-symbol {
+      position: relative;
+      z-index: 1;
+      font-size: 4.2rem;
+      line-height: 76px;
+      display: block;
+      background: var(--gold-grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 5px rgba(180,140,60,0.38));
+    }
+
+    .blessing {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(0.72rem, 2.5vw, 0.88rem);
+      font-style: italic;
+      letter-spacing: 0.10em;
+      color: #7a5c38;
+      line-height: 1.9;
+      margin-bottom: 1.8rem;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 1.6rem auto;
+      width: 80%;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-1), transparent);
+    }
+
+    .divider-gem {
+      font-size: 0.45rem;
+      color: var(--gold-1);
+      letter-spacing: 0.25em;
+    }
+
+    .card-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: #b8924a;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .groom-name,
+    .bride-name {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2.2rem, 8vw, 3.1rem);
+      color: #1a1108;
+      line-height: 1.15;
+      text-shadow: 0 2px 12px rgba(180,140,60,0.18), 0 1px 3px rgba(0,0,0,0.12);
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+    }
+
+    /* Light sweep on names */
+    .groom-name::after,
+    .bride-name::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -130%;
+      width: 75%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,248,188,0.52), transparent);
+      animation: light-sweep 5.5s ease-in-out infinite 1.2s;
+    }
+    .bride-name::after { animation-delay: 3s; }
+
+    @keyframes light-sweep {
+      0%,65% { left: -130%; }
+      82%     { left: 155%; }
+      100%    { left: 155%; }
+    }
+
+    .together-word {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #b8924a;
+      display: block;
+      margin: 0.6rem 0;
+    }
+
+    .bride-alt {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      letter-spacing: 0.14em;
+      color: #7a5c38;
+      display: block;
+      margin-top: 0.3rem;
+    }
+
+    .scroll-hint {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.30em;
+      color: #b8924a;
+      text-transform: uppercase;
+      margin-top: 2rem;
+      opacity: 0.75;
+      animation: hint-pulse 2.2s ease-in-out infinite alternate;
+    }
+
+    /* ================================================
+       SHARED SECTION HEADER
+    ================================================ */
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-label {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: #b8924a;
+      margin-bottom: 0.7rem;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.9rem, 7vw, 3rem);
+      font-weight: 400;
+      color: #1a1108;
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+    }
+
+    /* Light sweep on section titles */
+    .section-title::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -110%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,248,188,0.42), transparent);
+      animation: light-sweep 7s ease-in-out infinite 2.5s;
+    }
+
+    .title-ornament {
+      display: block;
+      font-size: 0.52rem;
+      letter-spacing: 0.5em;
+      color: var(--gold-1);
+      margin-top: 0.85rem;
+      opacity: 0.75;
+    }
+
+    /* ================================================
+       SECTION 3 — SAVE THE DATE
+    ================================================ */
+    #save-the-date {
+      padding: 5.5rem 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Date flip cards */
+    .date-cards-row {
+      display: flex;
+      justify-content: center;
+      gap: 1.1rem;
+      flex-wrap: wrap;
+      perspective: 900px;
+      margin-bottom: 4rem;
+    }
+
+    .flip-card {
+      width: 96px; height: 118px;
+      perspective: 900px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    @media (min-width: 420px) {
+      .flip-card { width: 115px; height: 138px; }
+    }
+
+    .flip-inner {
+      position: relative;
+      width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.72s cubic-bezier(0.34,1.08,0.64,1);
+      will-change: transform;
+    }
+
+    .flip-card.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-front,
+    .flip-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      overflow: hidden;
+    }
+
+    .flip-front {
+      background: rgba(249,251,248,0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: var(--sh-base), var(--sh-green);
+    }
+
+    .flip-back {
+      background: linear-gradient(148deg, #2e5c44, #3d7259, #2a5540);
+      transform: rotateY(180deg);
+      box-shadow: var(--sh-base), 0 0 24px rgba(230,199,122,0.26);
+    }
+
+    /* Gold border outline on both faces */
+    .flip-front::before,
+    .flip-back::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 20px;
+      background: var(--gold-grad);
+      z-index: -1;
+      opacity: 0.60;
+    }
+
+    .flip-lbl {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.60rem;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: #b8924a;
+    }
+
+    .flip-back .flip-lbl { color: rgba(243,226,169,0.75); }
+
+    .flip-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(1.9rem, 7vw, 2.5rem);
+      color: #1a1108;
+      line-height: 1;
+    }
+
+    .flip-back .flip-val { color: var(--gold-2); text-shadow: 0 0 14px rgba(230,199,122,0.45); }
+
+    /* Light sweep on reveal */
+    .flip-back::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      background: linear-gradient(90deg, transparent, rgba(255,248,188,0.18), transparent);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-100%);
+    }
+
+    .flip-card.flipped .flip-back::after {
+      animation: flip-sweep 0.9s ease-out 0.35s forwards;
+    }
+
+    @keyframes flip-sweep {
+      0%   { transform: translateX(-100%); opacity: 0; }
+      30%  { opacity: 1; }
+      100% { transform: translateX(100%);  opacity: 0; }
+    }
+
+    /* Countdown block */
+    .countdown-box {
+      position: relative;
+      background: rgba(249,251,248,0.65);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 22px;
+      padding: 2.2rem 1.5rem;
+      max-width: 400px;
+      margin: 0 auto;
+      box-shadow: var(--sh-base), var(--sh-green);
+    }
+
+    .countdown-box::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 24px;
+      background: var(--gold-grad);
+      z-index: -1;
+      opacity: 0.50;
+    }
+
+    .countdown-ttl {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: #b8924a;
+      display: block;
+      margin-bottom: 1.4rem;
+    }
+
+    .countdown-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+
+    .cd-unit { text-align: center; min-width: 58px; }
+
+    .cd-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 8.5vw, 2.7rem);
+      font-weight: 400;
+      color: #1a1108;
+      display: block;
+      line-height: 1;
+    }
+
+    .cd-lbl {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #b8924a;
+      display: block;
+      margin-top: 0.3rem;
+    }
+
+    .cd-sep {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      color: var(--gold-1);
+      opacity: 0.65;
+      margin-top: 0.05rem;
+      user-select: none;
+    }
+
+    /* ================================================
+       SECTION 4 — GALLERY
+    ================================================ */
+    #gallery {
+      padding: 5.5rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .gallery-item {
+      border-radius: 22px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      position: relative;
+      cursor: pointer;
+      will-change: transform;
+      box-shadow: var(--sh-base), 0 0 28px rgba(230,199,122,0.14);
+      transition: transform 0.45s cubic-bezier(0.22,1,0.36,1),
+                  box-shadow 0.45s ease;
+    }
+
+    .gallery-item:active {
+      transform: scale(1.025) translateY(-5px) !important;
+      box-shadow: 0 22px 40px rgba(0,0,0,0.14), 0 0 30px rgba(230,199,122,0.20);
+    }
+
+    /* Photo layer */
+    .gallery-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      will-change: transform;
+      transition: transform 0.55s cubic-bezier(0.22,1,0.36,1);
+      transform: scale(1.04);
+    }
+
+    .gallery-item:active .gallery-bg { transform: scale(1.09); }
+
+    /* Mid-layer — subtle texture overlay */
+    .gallery-mid {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.18) 0%, transparent 65%);
+    }
+
+    /* Gradient fade at bottom */
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(28,56,40,0.52) 0%, transparent 55%);
+    }
+
+    .gallery-caption {
+      position: absolute;
+      bottom: 0.85rem;
+      left: 0.85rem;
+      right: 0.85rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,245,195,0.82);
+    }
+
+    /* ================================================
+       SECTION 5 — EVENT CARDS
+    ================================================ */
+    #events {
+      padding: 5.5rem 1.5rem;
+      position: relative;
+    }
+
+    .events-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 560px) {
+      .events-grid { flex-direction: row; }
+      .event-card  { flex: 1; }
+    }
+
+    .event-card {
+      position: relative;
+      background: rgba(249,251,248,0.68);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 22px;
+      padding: 2.2rem 1.6rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      will-change: transform;
+      box-shadow: var(--sh-base), var(--sh-green);
+      transition: transform 0.45s cubic-bezier(0.22,1,0.36,1),
+                  box-shadow 0.45s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Gold border */
+    .event-card::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 24px;
+      background: linear-gradient(135deg,
+        rgba(230,199,122,0.58),
+        rgba(155,191,174,0.24) 50%,
+        rgba(230,199,122,0.45));
+      z-index: -1;
+    }
+
+    /* Tap: lift + glow */
+    .event-card:active {
+      transform: translateY(-10px) scale(1.028);
+      box-shadow:
+        0 24px 44px rgba(0,0,0,0.12),
+        0 0 32px rgba(230,199,122,0.24),
+        0 14px 28px rgba(155,191,174,0.22);
+    }
+
+    .event-icon {
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      background: var(--gold-grad);
+      margin: 0 auto 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(230,199,122,0.32);
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .event-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.3rem, 5vw, 1.75rem);
+      font-weight: 400;
+      color: #1a1108;
+      margin-bottom: 0.6rem;
+    }
+
+    .event-date,
+    .event-time {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.9rem;
+      color: #4a3826;
+      line-height: 1.7;
+    }
+
+    .event-venue {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: #7a5c38;
+      margin: 0.85rem 0 1.3rem;
+      line-height: 1.5;
+    }
+
+    .map-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
+      color: #7a5c38;
+      border: 1px solid #c4a05a;
+      border-radius: 50px;
+      padding: 0.52rem 1.22rem;
+      transition: background 0.28s ease, color 0.28s ease, border-color 0.28s ease;
+      background: rgba(230,199,122,0.07);
+    }
+
+    .map-btn:hover,
+    .map-btn:active {
+      background: #7a5c38;
+      color: #fff5cc;
+      border-color: #7a5c38;
+    }
+
+    .map-pin {
+      flex-shrink: 0;
+    }
+
+    /* ================================================
+       SECTION 6 — FOOTER
+    ================================================ */
+    #footer {
+      background: linear-gradient(180deg,
+        transparent,
+        rgba(95,143,123,0.07) 18%,
+        rgba(95,143,123,0.13) 100%);
+      padding: 5.5rem 1.5rem 3.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .footer-divider {
+      width: 130px;
+      height: 1px;
+      background: var(--gold-grad);
+      margin: 0 auto 2.2rem;
+      position: relative;
+    }
+
+    .footer-divider::before {
+      content: '✦  ✦  ✦';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 0.8rem;
+      background: linear-gradient(to bottom, #eef7f2, #dfeee8);
+      font-size: 0.45rem;
+      letter-spacing: 0.35em;
+      color: var(--gold-1);
+      white-space: nowrap;
+    }
+
+    .invited-by {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: #b8924a;
+      margin-bottom: 2rem;
+    }
+
+    .family-name {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(1.9rem, 6.5vw, 2.6rem);
+      display: block;
+      line-height: 1.3;
+      color: #3a2000;
+      text-shadow: 0 2px 10px rgba(180,120,30,0.28), 0 1px 3px rgba(0,0,0,0.18);
+    }
+
+    .family-sep {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.82rem;
+      letter-spacing: 0.22em;
+      color: #b8924a;
+      margin: 0.65rem 0;
+    }
+
+    .footer-compliment {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 3.8vw, 1.25rem);
+      font-weight: 300;
+      color: #4a3826;
+      line-height: 1.85;
+      max-width: 380px;
+      margin: 2.8rem auto 0;
+    }
+
+    .footer-meta {
+      margin-top: 3.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(180,140,60,0.20);
+      font-family: 'Lato', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      color: #b8924a;
+      opacity: 0.65;
+      text-transform: uppercase;
+    }
+
+    /* ================================================
+       SCROLL REVEAL SYSTEM
+    ================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition:
+        opacity  0.82s cubic-bezier(0.22,1,0.36,1),
+        transform 0.82s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .reveal.visible      { opacity: 1; transform: translateY(0); }
+    .reveal-d1           { transition-delay: 0.10s; }
+    .reveal-d2           { transition-delay: 0.20s; }
+    .reveal-d3           { transition-delay: 0.30s; }
+    .reveal-d4           { transition-delay: 0.42s; }
+
+    /* ================================================
+       UTILITY
+    ================================================ */
+    section { position: relative; overflow: hidden; }
+  </style>
+</head>
+<body>
+
+<!-- Floating background particles -->
+<div id="particles" aria-hidden="true"></div>
+
+<!-- ==========================================
+     SECTION 1: ENVELOPE LANDING
+=========================================== -->
+<section id="envelope-scene" aria-label="Wedding invitation landing screen">
+
+  <div class="scene-bg" aria-hidden="true"></div>
+
+  <!-- Corner flourishes -->
+  <div class="corner corner--tl" aria-hidden="true">
+    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 78 Q2 2 78 2" stroke="#9bbfae" stroke-width="1.2" fill="none"/>
+      <path d="M10 78 Q10 10 78 10" stroke="#e6c77a" stroke-width="0.6" fill="none" opacity="0.6"/>
+      <circle cx="8" cy="8" r="3" fill="#9bbfae" opacity="0.5"/>
+      <circle cx="2" cy="2" r="1.5" fill="#e6c77a" opacity="0.7"/>
+    </svg>
+  </div>
+  <div class="corner corner--tr" aria-hidden="true">
+    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 78 Q2 2 78 2" stroke="#9bbfae" stroke-width="1.2" fill="none"/>
+      <path d="M10 78 Q10 10 78 10" stroke="#e6c77a" stroke-width="0.6" fill="none" opacity="0.6"/>
+      <circle cx="8" cy="8" r="3" fill="#9bbfae" opacity="0.5"/>
+      <circle cx="2" cy="2" r="1.5" fill="#e6c77a" opacity="0.7"/>
+    </svg>
+  </div>
+  <div class="corner corner--bl" aria-hidden="true">
+    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 78 Q2 2 78 2" stroke="#9bbfae" stroke-width="1.2" fill="none"/>
+      <circle cx="8" cy="8" r="3" fill="#9bbfae" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="corner corner--br" aria-hidden="true">
+    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 78 Q2 2 78 2" stroke="#9bbfae" stroke-width="1.2" fill="none"/>
+      <circle cx="8" cy="8" r="3" fill="#9bbfae" opacity="0.5"/>
+    </svg>
+  </div>
+
+  <p class="env-title">A Wedding Invitation</p>
+
+  <div class="wax-seal-wrap"
+       id="sealBtn"
+       role="button"
+       tabindex="0"
+       aria-label="Tap to open the wedding invitation">
+    <div class="glow-ring glow-ring--gold" aria-hidden="true"></div>
+    <div class="glow-ring glow-ring--green" aria-hidden="true"></div>
+    <div class="seal-ripple" id="sealRipple" aria-hidden="true"></div>
+    <div class="wax-seal">
+      <span class="seal-mono">S&amp;T</span>
+    </div>
+  </div>
+
+  <p class="tap-hint" aria-hidden="true">✦ Tap to open ✦</p>
+
+</section>
+
+
+<!-- ==========================================
+     MAIN INVITATION — revealed on seal tap
+=========================================== -->
+<div id="invitation">
+
+  <!-- SECTION 2: FLOATING INVITATION CARD -->
+  <section id="card-section" aria-label="Wedding invitation card">
+    <div class="invite-card" id="inviteCard">
+
+      <!-- Corner ornaments -->
+      <div class="card-corner card-corner--tl" aria-hidden="true">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 34 Q2 2 34 2" stroke="#e6c77a" stroke-width="0.9" fill="none" opacity="0.6"/>
+          <circle cx="2" cy="2" r="1.5" fill="#e6c77a" opacity="0.65"/>
+        </svg>
+      </div>
+      <div class="card-corner card-corner--tr" aria-hidden="true">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 34 Q2 2 34 2" stroke="#e6c77a" stroke-width="0.9" fill="none" opacity="0.6"/>
+          <circle cx="2" cy="2" r="1.5" fill="#e6c77a" opacity="0.65"/>
+        </svg>
+      </div>
+      <div class="card-corner card-corner--bl" aria-hidden="true">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 34 Q2 2 34 2" stroke="#e6c77a" stroke-width="0.9" fill="none" opacity="0.6"/>
+          <circle cx="2" cy="2" r="1.5" fill="#e6c77a" opacity="0.65"/>
+        </svg>
+      </div>
+      <div class="card-corner card-corner--br" aria-hidden="true">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 34 Q2 2 34 2" stroke="#e6c77a" stroke-width="0.9" fill="none" opacity="0.6"/>
+          <circle cx="2" cy="2" r="1.5" fill="#e6c77a" opacity="0.65"/>
+        </svg>
+      </div>
+
+      <!-- Ganesha / Om -->
+      <div class="ganesha-wrap" aria-hidden="true">
+        <span class="om-symbol">ॐ</span>
+      </div>
+
+      <p class="blessing">
+        Srirasthu · Shubhamasthu<br>
+        Avighnamasthu
+      </p>
+
+      <div class="divider" aria-hidden="true">
+        <div class="divider-line"></div>
+        <span class="divider-gem">✦ ✦ ✦</span>
+        <div class="divider-line"></div>
+      </div>
+
+      <span class="card-label">Together they wed</span>
+
+      <div>
+        <span class="groom-name">Shiva Kumar Gupta</span>
+        <span class="together-word">weds</span>
+        <span class="bride-name">Vijaya Lakshmi</span>
+        <span class="bride-alt">(Tejaswini)</span>
+      </div>
+
+      <div class="divider" aria-hidden="true">
+        <div class="divider-line"></div>
+        <span class="divider-gem">✦ ✦ ✦</span>
+        <div class="divider-line"></div>
+      </div>
+
+      <p class="scroll-hint" aria-hidden="true">↓ Scroll to explore ↓</p>
+    </div>
+  </section>
+
+
+  <!-- SECTION 3: SAVE THE DATE -->
+  <section id="save-the-date" aria-label="Save the date">
+    <div class="section-header reveal">
+      <span class="section-label">Mark Your Calendar</span>
+      <h2 class="section-title">Save the Date</h2>
+      <span class="title-ornament" aria-hidden="true">✦ ✦ ✦</span>
+    </div>
+
+    <div class="date-cards-row" aria-label="Tap each tile to reveal the date">
+      <!-- Day -->
+      <div class="flip-card reveal reveal-d1"
+           id="flipDay"
+           role="button"
+           tabindex="0"
+           aria-label="Tap to reveal the day">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <span class="flip-lbl">Day</span>
+            <span class="flip-val" aria-hidden="true">?</span>
+          </div>
+          <div class="flip-back">
+            <span class="flip-lbl">Day</span>
+            <span class="flip-val">30</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Month -->
+      <div class="flip-card reveal reveal-d2"
+           id="flipMonth"
+           role="button"
+           tabindex="0"
+           aria-label="Tap to reveal the month">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <span class="flip-lbl">Month</span>
+            <span class="flip-val" style="font-size:clamp(1.3rem,6vw,1.8rem)" aria-hidden="true">?</span>
+          </div>
+          <div class="flip-back">
+            <span class="flip-lbl">Month</span>
+            <span class="flip-val" style="font-size:clamp(1.3rem,6vw,1.8rem)">April</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Year -->
+      <div class="flip-card reveal reveal-d3"
+           id="flipYear"
+           role="button"
+           tabindex="0"
+           aria-label="Tap to reveal the year">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <span class="flip-lbl">Year</span>
+            <span class="flip-val" style="font-size:clamp(1.3rem,6vw,1.8rem)" aria-hidden="true">?</span>
+          </div>
+          <div class="flip-back">
+            <span class="flip-lbl">Year</span>
+            <span class="flip-val" style="font-size:clamp(1.3rem,6vw,1.8rem)">2026</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Countdown -->
+    <div class="countdown-box reveal reveal-d2" aria-label="Countdown timer">
+      <span class="countdown-ttl">Counting down to forever</span>
+      <div class="countdown-row">
+        <div class="cd-unit">
+          <span class="cd-num" id="cd-days">--</span>
+          <span class="cd-lbl">Days</span>
+        </div>
+        <span class="cd-sep" aria-hidden="true">:</span>
+        <div class="cd-unit">
+          <span class="cd-num" id="cd-hours">--</span>
+          <span class="cd-lbl">Hours</span>
+        </div>
+        <span class="cd-sep" aria-hidden="true">:</span>
+        <div class="cd-unit">
+          <span class="cd-num" id="cd-mins">--</span>
+          <span class="cd-lbl">Mins</span>
+        </div>
+        <span class="cd-sep" aria-hidden="true">:</span>
+        <div class="cd-unit">
+          <span class="cd-num" id="cd-secs">--</span>
+          <span class="cd-lbl">Secs</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- SECTION 4: GALLERY -->
+  <section id="gallery" aria-label="Photo gallery">
+    <div class="section-header reveal">
+      <span class="section-label">Moments Together</span>
+      <h2 class="section-title">Our Gallery</h2>
+      <span class="title-ornament" aria-hidden="true">✦ ✦ ✦</span>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="gallery-item reveal reveal-d1" aria-label="Shiva Kumar and Tejaswini">
+        <img class="gallery-bg"
+             src="https://drive.google.com/thumbnail?id=1dEYpMoCd3qE0qnNQ3TWL4mNh3a-l0VhN&sz=w1200"
+             alt="Shiva Kumar and Tejaswini"
+             loading="lazy"
+             onerror="this.style.display='none';this.parentElement.querySelector('.gallery-fallback').style.display='block'">
+        <div class="gallery-mid" aria-hidden="true"></div>
+        <div class="gallery-overlay" aria-hidden="true"></div>
+        <div class="gallery-fallback" aria-hidden="true" style="display:none;position:absolute;inset:0;background:linear-gradient(158deg,#c8d8c2 0%,#9ab8a6 40%,#6a9282 100%)"></div>
+        <span class="gallery-caption">Together Forever</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- SECTION 5: EVENT CARDS -->
+  <section id="events" aria-label="Wedding events">
+    <div class="section-header reveal">
+      <span class="section-label">You Are Warmly Invited To</span>
+      <h2 class="section-title">Celebrations</h2>
+      <span class="title-ornament" aria-hidden="true">✦ ✦ ✦</span>
+    </div>
+
+    <div class="events-grid">
+
+      <!-- Sumuhurtham -->
+      <article class="event-card reveal reveal-d1">
+        <div class="event-icon" aria-hidden="true">🪔</div>
+        <h3 class="event-name">Sumuhurtham</h3>
+        <p class="event-date">Thursday, April 30, 2026</p>
+        <p class="event-time">11:13 AM</p>
+        <p class="event-venue">Markhandeya Bhavan<br>ECIL, Kapra, Kushaiguda<br>Hyderabad</p>
+        <a class="map-btn"
+           href="https://maps.app.goo.gl/XcawKvNTYSnramJ3A"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="View Markhandeya Bhavan on Google Maps">
+          <svg class="map-pin" width="11" height="13" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          View on Maps
+        </a>
+      </article>
+
+      <!-- Reception -->
+      <article class="event-card reveal reveal-d2">
+        <div class="event-icon" aria-hidden="true">🌸</div>
+        <h3 class="event-name">Reception</h3>
+        <p class="event-date">Friday, May 1, 2026</p>
+        <p class="event-time">7:30 PM onwards</p>
+        <p class="event-venue">Shastha Gardens<br>Nagarjuna Sagar Road<br>Ibrahimpatnam, R.R. Dist</p>
+        <a class="map-btn"
+           href="https://maps.app.goo.gl/VFWyJVo9dwAs99X87"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="View Shastha Gardens on Google Maps">
+          <svg class="map-pin" width="11" height="13" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          View on Maps
+        </a>
+      </article>
+
+    </div>
+  </section>
+
+
+  <!-- SECTION 6: FOOTER -->
+  <footer id="footer" aria-label="Invitation footer">
+    <div class="footer-divider" aria-hidden="true"></div>
+
+    <span class="invited-by">Invited by</span>
+
+    <span class="family-name reveal">Moturi's Family</span>
+
+    <p class="footer-compliment reveal reveal-d3">
+      With joyful hearts and blessings,<br>
+      we invite you to witness and celebrate<br>
+      the beginning of our forever.
+    </p>
+
+    <p class="footer-meta">
+      © 2026 · Shiva Kumar &amp; Tejaswini · With Love
+    </p>
+  </footer>
+
+</div><!-- /#invitation -->
+
+
+<script>
+  'use strict';
+
+  /* ================================================
+     PARTICLES — lightweight, GPU-driven
+  ================================================ */
+  (function () {
+    const container = document.getElementById('particles');
+    const COUNT = 20;
+    for (let i = 0; i < COUNT; i++) {
+      const el     = document.createElement('div');
+      el.className = 'particle';
+      const size   = Math.random() * 5 + 2;       // 2–7 px
+      const left   = Math.random() * 100;          // 0–100 %
+      const dur    = Math.random() * 18 + 10;      // 10–28 s
+      const delay  = -(Math.random() * dur);       // start at random offset
+      const isGold = Math.random() > 0.45;
+      el.style.cssText = [
+        `width:${size}px`,
+        `height:${size}px`,
+        `left:${left}%`,
+        `animation-duration:${dur}s`,
+        `animation-delay:${delay}s`,
+        `background:${isGold
+          ? 'radial-gradient(circle,rgba(230,199,122,0.42),transparent)'
+          : 'radial-gradient(circle,rgba(155,191,174,0.40),transparent)'}`,
+        `opacity:${(Math.random() * 0.45 + 0.18).toFixed(2)}`
+      ].join(';');
+      container.appendChild(el);
+    }
+  }());
+
+
+  /* ================================================
+     ENVELOPE — tap to open
+  ================================================ */
+  (function () {
+    const sealBtn       = document.getElementById('sealBtn');
+    const sealRipple    = document.getElementById('sealRipple');
+    const envelopeScene = document.getElementById('envelope-scene');
+    const invitation    = document.getElementById('invitation');
+    let opened = false;
+
+    function open() {
+      if (opened) return;
+      opened = true;
+
+      // Press down feel
+      sealBtn.classList.add('pressing');
+
+      // Ripple burst
+      sealRipple.classList.add('active');
+      sealRipple.addEventListener('animationend', function handler() {
+        sealRipple.classList.remove('active');
+        sealRipple.removeEventListener('animationend', handler);
+      });
+
+      // Fade envelope out then reveal invitation
+      setTimeout(function () {
+        envelopeScene.style.transition = 'opacity 0.65s ease, transform 0.65s cubic-bezier(0.22,1,0.36,1)';
+        envelopeScene.style.opacity    = '0';
+        envelopeScene.style.transform  = 'scale(0.96)';
+        envelopeScene.style.pointerEvents = 'none';
+
+        setTimeout(function () {
+          envelopeScene.style.display = 'none';
+          invitation.style.display    = 'block';
+
+          // Double rAF ensures the browser paints before transition fires
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              invitation.classList.add('revealed');
+              checkReveals();
+            });
+          });
+        }, 660);
+      }, 280);
+    }
+
+    sealBtn.addEventListener('click', open);
+    sealBtn.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+    });
+  }());
+
+
+  /* ================================================
+     FLIP CARDS
+  ================================================ */
+  (function () {
+    ['flipDay', 'flipMonth', 'flipYear'].forEach(function (id) {
+      const card = document.getElementById(id);
+      function toggle() { card.classList.toggle('flipped'); }
+      card.addEventListener('click', toggle);
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    });
+  }());
+
+
+  /* ================================================
+     COUNTDOWN TIMER
+     Target: April 30 2026 11:13 AM IST  = UTC 05:43
+  ================================================ */
+  (function () {
+    const TARGET = Date.UTC(2026, 3, 30, 5, 43, 0); // month is 0-indexed
+    const els = {
+      days:  document.getElementById('cd-days'),
+      hours: document.getElementById('cd-hours'),
+      mins:  document.getElementById('cd-mins'),
+      secs:  document.getElementById('cd-secs')
+    };
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function tick() {
+      const diff = TARGET - Date.now();
+      if (diff <= 0) {
+        els.days.textContent  = '00';
+        els.hours.textContent = '00';
+        els.mins.textContent  = '00';
+        els.secs.textContent  = '00';
+        return;
+      }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000)  / 60000);
+      const s = Math.floor((diff % 60000)    / 1000);
+      els.days.textContent  = pad(d);
+      els.hours.textContent = pad(h);
+      els.mins.textContent  = pad(m);
+      els.secs.textContent  = pad(s);
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  }());
+
+
+  /* ================================================
+     SCROLL REVEAL
+  ================================================ */
+  function checkReveals() {
+    var items = document.querySelectorAll('.reveal:not(.visible)');
+    var trigger = window.innerHeight * 0.93;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].getBoundingClientRect().top < trigger) {
+        items[i].classList.add('visible');
+      }
+    }
+  }
+
+  window.addEventListener('scroll', checkReveals, { passive: true });
+  window.addEventListener('resize', checkReveals, { passive: true });
+
+
+  /* ================================================
+     GALLERY PARALLAX — multi-speed layers
+  ================================================ */
+  (function () {
+    var items = document.querySelectorAll('.gallery-item');
+    var speeds = [0.09, 0.06, 0.04, 0.08, 0.05, 0.07];
+
+    function onScroll() {
+      var vh = window.innerHeight;
+      for (var i = 0; i < items.length; i++) {
+        var rect     = items[i].getBoundingClientRect();
+        var progress = (vh - rect.top) / (vh + rect.height);
+        var offset   = (progress - 0.5) * 55 * speeds[i % speeds.length];
+        var bg = items[i].querySelector('.gallery-bg');
+        if (bg) {
+          bg.style.transform = 'scale(1.1) translateY(' + offset.toFixed(1) + 'px)';
+        }
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }());
+
+
+  /* ================================================
+     INVITATION CARD — pointer/touch 3-D tilt
+  ================================================ */
+  (function () {
+    var card    = document.getElementById('inviteCard');
+    var isTouch = false;
+
+    function applyTilt(cx, cy) {
+      var rect = card.getBoundingClientRect();
+      var nx   = (cx - rect.left - rect.width  / 2) / (rect.width  / 2);
+      var ny   = (cy - rect.top  - rect.height / 2) / (rect.height / 2);
+      card.style.animation = 'none';
+      card.style.transform =
+        'perspective(1200px) rotateX(' + (-ny * 7).toFixed(2) + 'deg) ' +
+        'rotateY(' + (nx * 7).toFixed(2) + 'deg) translateZ(0)';
+    }
+
+    function resetTilt() {
+      card.style.animation = '';
+      card.style.transform = '';
+    }
+
+    card.addEventListener('mousemove', function (e) {
+      if (!isTouch) applyTilt(e.clientX, e.clientY);
+    });
+    card.addEventListener('mouseleave', resetTilt);
+
+    card.addEventListener('touchstart', function () { isTouch = true; }, { passive: true });
+    card.addEventListener('touchmove', function (e) {
+      applyTilt(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+    card.addEventListener('touchend',   resetTilt, { passive: true });
+  }());
+</script>
+
+</body>
+</html>

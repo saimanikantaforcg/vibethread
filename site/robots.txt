@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /account.html
+Disallow: /cart.html
+Disallow: /checkout.html
+Disallow: /thank-you.html
+
+Allow: /
+
+# Replace YOUR-SITE with your actual Netlify subdomain after deployment
+Sitemap: https://YOUR-SITE.netlify.app/sitemap.xml

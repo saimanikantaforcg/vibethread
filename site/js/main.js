@@ -1,5 +1,5 @@
 // Main JavaScript for ClothingHub
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
   const pageSlug =
     typeof window.getPageSlug === "function" ? window.getPageSlug() : "";
 
@@ -21,7 +21,7 @@ function initializeMobileMenu() {
   const mobileMenu = document.getElementById("mobileMenu");
 
   if (mobileMenuButton && mobileMenu) {
-    mobileMenuButton.addEventListener("click", function () {
+    mobileMenuButton.addEventListener("click", function() {
       if (
         mobileMenu.style.display === "none" ||
         mobileMenu.style.display === ""
@@ -37,7 +37,7 @@ function initializeMobileMenu() {
     // Close mobile menu when clicking on a link
     const mobileMenuLinks = mobileMenu.querySelectorAll("a");
     mobileMenuLinks.forEach((link) => {
-      link.addEventListener("click", function () {
+      link.addEventListener("click", function() {
         mobileMenu.style.display = "none";
         mobileMenuButton.innerHTML = '<i class="fas fa-bars text-lg"></i>';
       });
@@ -56,6 +56,14 @@ function loadFeaturedProducts() {
   featuredProductsContainer.innerHTML = featuredProducts
     .map((product) => createProductCard(product))
     .join("");
+
+  if (typeof dataLayerManager !== "undefined") {
+    dataLayerManager.trackPageView("home", document.title);
+    dataLayerManager.trackViewItemList(
+      featuredProducts,
+      "Featured Products - Home",
+    );
+  }
 }
 
 // Create product card HTML
@@ -81,13 +89,15 @@ function createProductCard(product) {
                 }</p>
                 <div class="flex items-center justify-between">
                     <span class="text-xl font-bold text-blue-600">${ProductUtils.formatPrice(
-                      product.price
+                      product.price,
                     )}</span>
                     <div class="flex space-x-2">
-                        <button onclick="viewProduct(${product.id})" 
-                                class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition duration-300 text-sm">
+                        <a href="product.html?id=${encodeURIComponent(
+                          product.id,
+                        )}" 
+                           class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition duration-300 text-sm inline-flex items-center">
                             View
-                        </button>
+                        </a>
                         <button onclick="addToCartQuick(${product.id})" 
                                 class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300 text-sm">
                             <i class="fas fa-cart-plus"></i>
@@ -115,8 +125,12 @@ function addToCartQuick(productId) {
 
 // View product details
 function viewProduct(productId) {
-  window.location.href = `product.html?id=${productId}`;
+  const normalizedId = Number.parseInt(productId, 10);
+  if (Number.isNaN(normalizedId)) return;
+  window.location.href = `product.html?id=${encodeURIComponent(normalizedId)}`;
 }
+
+window.viewProduct = viewProduct;
 
 // Update authentication state in UI
 function updateAuthState() {
@@ -226,7 +240,7 @@ function showWishlist() {
 }
 
 // Smooth scrolling for anchor links
-document.addEventListener("click", function (e) {
+document.addEventListener("click", function(e) {
   if (
     e.target.tagName === "A" &&
     e.target.getAttribute("href")?.startsWith("#")
@@ -248,7 +262,7 @@ function initializeSearch() {
   const searchButton = document.getElementById("searchButton");
 
   if (searchInput) {
-    searchInput.addEventListener("keypress", function (e) {
+    searchInput.addEventListener("keypress", function(e) {
       if (e.key === "Enter") {
         performSearch();
       }
@@ -267,7 +281,7 @@ function performSearch() {
   const query = searchInput.value.trim();
   if (query) {
     window.location.href = `categories.html?search=${encodeURIComponent(
-      query
+      query,
     )}`;
   }
 }
@@ -286,7 +300,7 @@ function initializeBackToTop() {
   document.body.appendChild(backToTopBtn);
 
   // Show/hide based on scroll position
-  window.addEventListener("scroll", function () {
+  window.addEventListener("scroll", function() {
     if (window.pageYOffset > 300) {
       backToTopBtn.style.opacity = "1";
       backToTopBtn.style.pointerEvents = "auto";
@@ -297,7 +311,7 @@ function initializeBackToTop() {
   });
 
   // Scroll to top when clicked
-  backToTopBtn.addEventListener("click", function () {
+  backToTopBtn.addEventListener("click", function() {
     window.scrollTo({
       top: 0,
       behavior: "smooth",

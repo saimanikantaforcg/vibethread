@@ -1,18 +1,59 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Thank You - VibeThread</title>
+    <meta
+      name="description"
+      content="Thank you for your VibeThread order! Your fashion purchase is confirmed and on its way."
+    />
     <script>
       window.dataLayer = window.dataLayer || [];
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.c360a.salesforce.com/beacon/c360a/ef0e581a-df74-4390-804c-ac8b59ca6188/scripts/c360a.min.js"></script>
+    <!-- Salesforce SDK: managed via sf-config.js — set your Beacon ID using the ⚙ SDK Setup panel -->
+    <script src="js/sf-config.js"></script>
+    <script src="js/sf-bridge.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+            colors: {
+              white: "#161B22" /* Dark panel color */,
+              gray: {
+                50: "#0D1117" /* Darkest background */,
+                100: "#21262D" /* Slightly lighter for hover elements */,
+                200: "#30363D" /* Borders / secondary background */,
+                300: "#484F58" /* Borders */,
+                400: "#8B949E" /* Muted text */,
+                500: "#8B949E" /* Form text / icons */,
+                600: "#C9D1D9" /* Subheadings */,
+                700: "#C9D1D9" /* Body Text */,
+                800: "#F0F6FC" /* Main headings */,
+              },
+              blue: {
+                600: "#58A6FF" /* Primary Blue Accent */,
+                700: "#79C0FF" /* Primary Blue Hover */,
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="Assets/theme.css" />
   </head>
   <body class="bg-gray-50">
     <header class="bg-white shadow-md sticky top-0 z-50">
@@ -24,13 +65,22 @@
               alt="VibeThread logo"
               class="h-8 w-8 object-contain rounded"
             />
-            <a href="index.html" class="text-2xl font-bold text-gray-800">VibeThread</a>
+            <a href="index.html" class="text-2xl font-bold text-gray-800"
+              >VibeThread</a
+            >
           </div>
           <div class="flex items-center space-x-4">
-            <a href="login.html" class="text-gray-700 hover:text-blue-600" id="userIcon">
+            <a
+              href="login.html"
+              class="text-gray-700 hover:text-blue-600"
+              id="userIcon"
+            >
               <i class="fas fa-user text-lg"></i>
             </a>
-            <a class="relative text-gray-700 hover:text-blue-600" href="cart.html">
+            <a
+              class="relative text-gray-700 hover:text-blue-600"
+              href="cart.html"
+            >
               <i class="fas fa-shopping-cart text-lg"></i>
               <span
                 class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
@@ -43,20 +93,26 @@
       </nav>
     </header>
 
-    <section class="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-12">
+    <section class="bg-[#161B22] border-b border-gray-200 text-gray-800 py-12">
       <div class="container mx-auto px-4 text-center">
-        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div
+          class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4"
+        >
           <i class="fas fa-check text-2xl"></i>
         </div>
         <h1 class="text-4xl font-bold mb-2">Thank You For Your Order</h1>
-        <p class="text-blue-100">Your purchase was successful and has been confirmed.</p>
+        <p class="text-blue-100">
+          Your purchase was successful and has been confirmed.
+        </p>
       </div>
     </section>
 
     <main class="container mx-auto px-4 py-10">
       <div class="max-w-3xl mx-auto space-y-6">
         <section class="bg-white rounded-lg shadow-sm p-6">
-          <h2 class="text-xl font-semibold text-gray-800 mb-4">Order Confirmation</h2>
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">
+            Order Confirmation
+          </h2>
           <div class="grid sm:grid-cols-2 gap-4 text-sm">
             <div class="bg-gray-50 rounded p-3">
               <p class="text-gray-500">Order ID</p>
@@ -80,7 +136,9 @@
         <section class="bg-white rounded-lg shadow-sm p-6">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-semibold text-gray-800">Order Details</h2>
-            <p class="text-lg font-semibold text-gray-900" id="orderTotal">$0.00</p>
+            <p class="text-lg font-semibold text-gray-900" id="orderTotal">
+              $0.00
+            </p>
           </div>
           <ul id="orderItems" class="text-sm text-gray-700"></ul>
         </section>
@@ -104,7 +162,9 @@
 
     <footer class="bg-gray-800 text-white py-12">
       <div class="container mx-auto px-4 text-center">
-        <p class="text-gray-300">&copy; 2025 VibeThread. All rights reserved. This is a demo site.</p>
+        <p class="text-gray-300">
+          &copy; 2025 VibeThread. All rights reserved. This is a demo site.
+        </p>
       </div>
     </footer>
 
