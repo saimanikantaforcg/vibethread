@@ -149,10 +149,18 @@ SalesforceInteractions.init({
         /* Feed the SF Data Cloud inspector panel */
         try {
           window.__vtSfOutbound = window.__vtSfOutbound || [];
-          window.__vtSfOutbound.push({
-            t: Date.now(),
-            e: JSON.parse(JSON.stringify(event)),
-          });
+          var capturedEvent = JSON.parse(JSON.stringify(event));
+          /* Enrich with anonymousId — SDK adds this after onActionEvent runs */
+          try {
+            var anonId = typeof SalesforceInteractions.getAnonymousId === "function"
+              ? SalesforceInteractions.getAnonymousId()
+              : null;
+            if (anonId) {
+              capturedEvent.user = capturedEvent.user || {};
+              capturedEvent.user.anonymousId = anonId;
+            }
+          } catch (_) {}
+          window.__vtSfOutbound.push({ t: Date.now(), e: capturedEvent });
         } catch (_) {}
 
         const eventTypeMap = {
