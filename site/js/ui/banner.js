@@ -14,11 +14,13 @@ function getCookieValue(name) {
 }
 
 function setCookieValue(name, value) {
+  var secure = window.location.protocol === "https:" ? "; secure" : "";
   document.cookie =
     name +
     "=" +
     encodeURIComponent(value) +
-    "; path=/; max-age=31536000; samesite=lax";
+    "; path=/; max-age=31536000; samesite=lax" +
+    secure;
 }
 
 function getStoredConsent() {

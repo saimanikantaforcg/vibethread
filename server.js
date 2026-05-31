@@ -11,7 +11,7 @@ const SECURITY_HEADERS = {
   "Referrer-Policy": "strict-origin-when-cross-origin",
   "Content-Security-Policy": [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://cdn.c360a.salesforce.com",
+    "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://cdn.c360a.salesforce.com https://cdn.evergage.com https://*.evergage.com",
     "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com",
     "font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com",
     "img-src 'self' data: blob: https://images.unsplash.com",
