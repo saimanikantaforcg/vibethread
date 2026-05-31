@@ -105,6 +105,15 @@
     var s = document.createElement("script");
     s.src = getSdkUrl();
     s.async = true;
+    s.onload = function() {
+      /* Load the local sitemap after the SDK is ready.
+         Guard against double-injection (e.g. if SDK CDN also loads one). */
+      if (window.__vtSitemapInjected) return;
+      window.__vtSitemapInjected = true;
+      var sm = document.createElement("script");
+      sm.src = "/js/sitemap.js";
+      document.head.appendChild(sm);
+    };
     document.head.appendChild(s);
   })();
 

@@ -71,6 +71,12 @@ function getActiveOptionText(containerSelector) {
   return active.length ? active.text().trim() : "";
 }
 
+/* Matches a page path with or without .html (handles Netlify Pretty URLs) */
+function matchPath(page) {
+  var p = window.location.pathname;
+  return p === "/" + page + ".html" || p === "/" + page || p === "/" + page + "/";
+}
+
 /* =============================================================================
    PROFILE / IDENTITY HELPERS
    ============================================================================= */
@@ -212,10 +218,8 @@ SalesforceInteractions.init({
         name: "home",
 
         isMatch: function() {
-          return (
-            window.location.pathname === "/" ||
-            window.location.pathname === "/index.html"
-          );
+          var p = window.location.pathname;
+          return p === "/" || p === "/index.html" || p === "/index";
         },
 
         interaction: {
@@ -250,7 +254,7 @@ SalesforceInteractions.init({
         name: "plp",
 
         isMatch: function() {
-          return window.location.pathname === "/categories.html";
+          return matchPath("categories");
         },
 
         interaction: {
@@ -289,7 +293,7 @@ SalesforceInteractions.init({
         name: "pdp",
 
         isMatch: function() {
-          return window.location.pathname === "/product.html";
+          return matchPath("product");
         },
 
         interaction: {
@@ -372,7 +376,7 @@ SalesforceInteractions.init({
         name: "cart",
 
         isMatch: function() {
-          return window.location.pathname === "/cart.html";
+          return matchPath("cart");
         },
 
         interaction: {
@@ -403,7 +407,7 @@ SalesforceInteractions.init({
         name: "checkout",
 
         isMatch: function() {
-          return window.location.pathname === "/checkout.html";
+          return matchPath("checkout");
         },
 
         interaction: {
@@ -434,7 +438,7 @@ SalesforceInteractions.init({
         name: "login",
 
         isMatch: function() {
-          return window.location.pathname === "/login.html";
+          return matchPath("login");
         },
 
         interaction: {
@@ -460,7 +464,7 @@ SalesforceInteractions.init({
         name: "about",
 
         isMatch: function() {
-          return window.location.pathname === "/about.html";
+          return matchPath("about");
         },
 
         interaction: {
@@ -497,7 +501,7 @@ SalesforceInteractions.init({
         name: "thank_you",
 
         isMatch: function() {
-          return window.location.pathname === "/thank-you.html";
+          return matchPath("thank-you");
         },
 
         interaction: {
