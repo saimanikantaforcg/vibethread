@@ -102,9 +102,41 @@
 
   /* ─────────────────────── SDK injection ─────────────────────── */
   (function injectSdk() {
+    var url = getSdkUrl();
     var s = document.createElement("script");
-    s.src = getSdkUrl();
+    s.id = "sf-interactions-sdk";
+    s.src = url;
     s.async = true;
+
+    s.onload = function() {
+      console.log("[SF-Config] SDK loaded successfully: " + url);
+      window.__vtSfSdkLoaded = true;
+      window.__vtSfSdkStatus = "ready";
+
+      /* Basic auto-initialization if SalesforceInteractions is available */
+      try {
+        var sf = window.SalesforceInteractions || (typeof window.getSalesforceInteractions === 'function' ? window.getSalesforceInteractions() : null);
+        if (sf && typeof sf.init === "function") {
+          sf.init({
+            personalization: {
+              dataspace: "default"
+            }
+          }).then(function() {
+             console.log("[SF-Config] SDK initialized with default config.");
+          }).catch(function(e) {
+             console.warn("[SF-Config] SDK init failed:", e);
+          });
+        }
+      } catch (_) {}
+    };
+
+    s.onerror = function() {
+      console.error("[SF-Config] SDK failed to load: " + url);
+      window.__vtSfSdkLoaded = false;
+      window.__vtSfSdkStatus = "error";
+    };
+
+    window.__vtSfSdkStatus = "loading";
     document.head.appendChild(s);
   })();
 
@@ -147,9 +179,32 @@
         "letter-spacing:.02em",
       ].join(";"),
     });
-    btn.textContent = custom
-      ? "\u2699\uFE0F SDK \u2713"
-      : "\u2699\uFE0F SDK Setup";
+
+    function updateBtn() {
+      var status = window.__vtSfSdkStatus || "not_applied";
+      var icon = "\u2699\uFE0F";
+      var text = custom ? " SDK \u2713" : " SDK Setup";
+
+      if (status === "loading") {
+        btn.textContent = icon + " Loading...";
+        btn.style.background = "#ca8a04"; /* Orange */
+      } else if (status === "error") {
+        btn.textContent = icon + " SDK Error";
+        btn.style.background = "#dc2626"; /* Red */
+      } else {
+        btn.textContent = icon + text;
+        btn.style.background = custom ? "#16a34a" : "#2563eb";
+      }
+    }
+
+    updateBtn();
+    /* Poll briefly to update icon if status changes */
+    var pollCount = 0;
+    var timer = setInterval(function() {
+      updateBtn();
+      if (++pollCount > 10 || window.__vtSfSdkStatus === "ready") clearInterval(timer);
+    }, 1000);
+
     btn.addEventListener("click", openSetupModal);
     document.body.appendChild(btn);
   }

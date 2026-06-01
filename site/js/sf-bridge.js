@@ -51,20 +51,73 @@
   }
 
   /* ── Salesforce SDK accessor ────────────────────────────────── */
+  /* ── Salesforce SDK accessor ────────────────────────────────── */
+  var eventQueue = [];
+  var isProcessingQueue = false;
+
   function getSFApi() {
-    if (typeof window.getSalesforceInteractions !== "function") return null;
-    try {
-      var api = window.getSalesforceInteractions();
-      return api && typeof api.sendEvent === "function" ? api : null;
-    } catch (_) {
-      return null;
+    /* Try newest standard first */
+    if (typeof window.getSalesforceInteractions === "function") {
+      try {
+        var api = window.getSalesforceInteractions();
+        if (api && typeof api.sendEvent === "function") return api;
+      } catch (_) {}
     }
+    /* Fallback to global object if initialized */
+    if (typeof window.SalesforceInteractions !== "undefined" && window.SalesforceInteractions !== null) {
+       if (typeof window.SalesforceInteractions.sendEvent === "function") {
+         return window.SalesforceInteractions;
+       }
+    }
+    return null;
+  }
+
+  function processQueue() {
+    if (isProcessingQueue) return;
+    var api = getSFApi();
+    if (!api) return;
+
+    isProcessingQueue = true;
+    while (eventQueue.length > 0) {
+      var payload = eventQueue.shift();
+      try {
+        api.sendEvent(payload);
+        /* Feed the SF Data Cloud inspector panel */
+        window.__vtSfOutbound = window.__vtSfOutbound || [];
+        window.__vtSfOutbound.push({
+          t: Date.now(),
+          e: JSON.parse(JSON.stringify(payload)),
+        });
+      } catch (e) {
+        console.warn("[SF-Bridge] Failed to send queued event:", e);
+      }
+    }
+    isProcessingQueue = false;
   }
 
   function sendToSF(payload) {
     if (!isConsentGiven()) return;
     var api = getSFApi();
-    if (!api) return;
+    
+    if (!api) {
+      /* Buffer event if SDK is still loading */
+      if (window.__vtSfSdkStatus === "loading") {
+        console.log("[SF-Bridge] SDK loading, buffering event:", payload.interaction.name);
+        eventQueue.push(payload);
+        
+        /* Set up a one-time listener or poll for readiness */
+        var checkLimit = 0;
+        var checker = setInterval(function() {
+          if (getSFApi()) {
+            clearInterval(checker);
+            processQueue();
+          }
+          if (++checkLimit > 20) clearInterval(checker); /* Give up after 10s */
+        }, 500);
+      }
+      return;
+    }
+
     try {
       api.sendEvent(payload);
       /* Feed the SF Data Cloud inspector panel */

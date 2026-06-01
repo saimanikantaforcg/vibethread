@@ -74,7 +74,9 @@ function getActiveOptionText(containerSelector) {
 /* Matches a page path with or without .html (handles Netlify Pretty URLs) */
 function matchPath(page) {
   var p = window.location.pathname;
-  return p === "/" + page + ".html" || p === "/" + page || p === "/" + page + "/";
+  return (
+    p === "/" + page + ".html" || p === "/" + page || p === "/" + page + "/"
+  );
 }
 
 /* =============================================================================
@@ -152,9 +154,10 @@ SalesforceInteractions.init({
           var capturedEvent = JSON.parse(JSON.stringify(event));
           /* Enrich with anonymousId — SDK adds this after onActionEvent runs */
           try {
-            var anonId = typeof SalesforceInteractions.getAnonymousId === "function"
-              ? SalesforceInteractions.getAnonymousId()
-              : null;
+            var anonId =
+              typeof SalesforceInteractions.getAnonymousId === "function"
+                ? SalesforceInteractions.getAnonymousId()
+                : null;
             if (anonId) {
               capturedEvent.user = capturedEvent.user || {};
               capturedEvent.user.anonymousId = anonId;

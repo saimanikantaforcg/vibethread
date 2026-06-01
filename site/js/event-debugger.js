@@ -46,10 +46,9 @@
   }
 
   function isSdkReady() {
-    return (
-      typeof window.SalesforceInteractions !== "undefined" &&
-      window.SalesforceInteractions !== null
-    );
+    var hasGlobal = typeof window.SalesforceInteractions !== "undefined" && window.SalesforceInteractions !== null;
+    var hasApi = typeof window.getSalesforceInteractions === "function";
+    return hasGlobal || hasApi;
   }
 
   function getCurrentUser() {
@@ -68,6 +67,19 @@
     if (!statusEl) return;
     var user = getCurrentUser();
     var events = getOutbound();
+    var sdkStatus = "not loaded";
+    var sdkColor = "#dc2626"; // red
+
+    if (isSdkReady()) {
+      sdkStatus = "ready";
+      sdkColor = "#16a34a"; // green
+    } else if (window.__vtSfSdkStatus === "loading") {
+      sdkStatus = "loading...";
+      sdkColor = "#ca8a04"; // orange
+    } else if (window.__vtSfSdkStatus === "error") {
+      sdkStatus = "error (check console)";
+    }
+
     statusEl.innerHTML =
       "<div><strong>User:</strong> " +
       (user
@@ -77,9 +89,7 @@
       "<div><strong>Consent:</strong> " +
       (isConsentGiven() ? "accepted" : "declined") +
       "</div>" +
-      "<div><strong>SDK:</strong> " +
-      (isSdkReady() ? "ready" : "not loaded") +
-      "</div>" +
+      "<div style='color:" + sdkColor + "'><strong>SDK:</strong> " + sdkStatus + "</div>" +
       "<div><strong>Captured:</strong> " +
       events.length +
       " outbound event(s)</div>";
