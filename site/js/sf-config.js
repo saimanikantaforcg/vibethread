@@ -21,7 +21,7 @@
 
   /* ─────────────────────── Constants ─────────────────────── */
   var SF_SDK_KEY = "vtSfSdkUrl";
-  var DEFAULT_BEACON_ID = "48cc94a2-0a94-43e1-b0af-46955055efa5";
+  var DEFAULT_BEACON_ID = "e655ea53-83a1-45f2-af07-00594e3bd341";
   var DEFAULT_SDK_URL =
     "https://cdn.c360a.salesforce.com/beacon/c360a/" +
     DEFAULT_BEACON_ID +
